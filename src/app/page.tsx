@@ -58,13 +58,29 @@ export default function HomePage() {
   const { t } = useLang();
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="min-h-screen bg-gray-950 text-white relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#1e3a8a33,transparent_55%)]" />
+        <div
+          className="absolute -right-20 -top-10 h-[360px] w-[360px] opacity-30 blur-[1px]"
+          style={{
+            backgroundImage: "url('/globe.svg')",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+          }}
+        />
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-gray-950 to-transparent" />
+      </div>
+      <div className="relative z-10">
       {/* Navbar */}
       <nav className="sticky top-0 z-40 bg-gray-950/80 backdrop-blur-xl border-b border-blue-900/20">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Droplets className="w-5 h-5 text-white" />
+            <div className="relative">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-400 to-cyan-300 blur-sm opacity-70" />
+              <div className="relative w-9 h-9 bg-gradient-to-br from-blue-600 to-cyan-400 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 ring-1 ring-white/20">
+                <Droplets className="w-5 h-5 text-white" />
+              </div>
             </div>
             <div>
               <span className="font-bold text-white text-lg tracking-tight">JalSetu</span>
@@ -86,6 +102,14 @@ export default function HomePage() {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-gray-950 to-cyan-950 opacity-80" />
+        <div
+          className="absolute right-8 top-16 h-56 w-56 opacity-35"
+          style={{
+            backgroundImage: "url('/globe.svg')",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+          }}
+        />
         {/* Animated bg */}
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(20)].map((_, i) => (
@@ -131,7 +155,7 @@ export default function HomePage() {
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              href="/assess"
+              href="/assess?tab=leaderboard"
               className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/15 hover:border-white/25 text-white font-medium px-8 py-4 rounded-2xl transition-all text-base backdrop-blur-sm"
             >
               <Users className="w-5 h-5" />
@@ -283,6 +307,7 @@ export default function HomePage() {
           </p>
         </div>
       </footer>
+      </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import { LangProvider } from "@/components/lang-context";
+import { GeminiChat } from "@/components/gemini-chat";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff2",
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LangProvider>
           {children}
+          <GeminiChat />
         </LangProvider>
         <VisualEditsMessenger />
       </body>

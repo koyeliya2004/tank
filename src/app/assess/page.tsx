@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useLang } from "@/components/lang-context";
 import { MapPicker } from "@/components/map-picker";
 import { ResultsDashboard } from "@/components/results-dashboard";
@@ -11,7 +13,7 @@ import { SubsidyTracker } from "@/components/subsidy-tracker";
 import { BlueprintGenerator } from "@/components/blueprint-generator";
 import { AssessmentResult } from "@/lib/feasibility-engine";
 import { RUNOFF_COEFFICIENTS, CGWB_AQUIFER_DATA } from "@/lib/groundwater-data";
-import { Loader2, ChevronRight } from "lucide-react";
+import { ChevronRight, Droplets, Home, Loader2 } from "lucide-react";
 
 const STATES = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
@@ -27,7 +29,14 @@ type Tab = "assess" | "results" | "leaderboard" | "marketplace" | "subsidy" | "b
 export default function AssessmentPage() {
   const { t } = useLang();
 
-  const [tab, setTab] = useState<Tab>("assess");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [tab, setTab] = useState<Tab>(() => {
+    if (tabParam === "leaderboard" || tabParam === "assess") {
+      return tabParam;
+    }
+    return "assess";
+  });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AssessmentResult | null>(null);
   const [weatherData, setWeatherData] = useState<null | {
@@ -49,6 +58,12 @@ export default function AssessmentPage() {
   const [openSpaceArea, setOpenSpaceArea] = useState(30);
   const [storageAvailable, setStorageAvailable] = useState(false);
   const [existingBorewell, setExistingBorewell] = useState(false);
+
+  useEffect(() => {
+    if (tabParam === "leaderboard" || tabParam === "assess") {
+      setTab(tabParam);
+    }
+  }, [tabParam]);
 
   const handleLocationSelect = (newLat: number, newLon: number, addr: string, detectedArea?: number) => {
     setLat(newLat);
@@ -131,11 +146,41 @@ export default function AssessmentPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-blue-950/50 to-gray-950">
+    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-blue-950/50 to-gray-950 relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#1d4ed833,transparent_60%)]" />
+        <div
+          className="absolute -right-24 top-24 h-72 w-72 opacity-25"
+          style={{
+            backgroundImage: "url('/globe.svg')",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+          }}
+        />
+      </div>
+      <div className="relative z-10">
       {/* Tab navigation */}
       <div className="sticky top-0 z-30 bg-gray-950/80 backdrop-blur-xl border-b border-blue-800/20">
+        <div className="max-w-3xl mx-auto px-3 py-3 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 text-white">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-300 blur-sm opacity-70" />
+              <div className="relative w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-400 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30 ring-1 ring-white/20">
+                <Droplets className="w-4 h-4 text-white" />
+              </div>
+            </div>
+            <span className="text-sm font-semibold">JalSetu</span>
+          </Link>
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-xs text-blue-200 bg-blue-900/30 border border-blue-700/30 px-3 py-1.5 rounded-full hover:bg-blue-900/50 transition"
+          >
+            <Home className="w-3.5 h-3.5" />
+            Back to Home
+          </Link>
+        </div>
         <div className="max-w-3xl mx-auto px-3">
-          <div className="flex gap-1.5 overflow-x-auto py-2.5 scrollbar-hide">
+          <div className="flex gap-1.5 overflow-x-auto pb-2.5 scrollbar-hide">
             {tabs.map((tab_) => (
               <button
                 key={tab_.id}
@@ -357,6 +402,7 @@ export default function AssessmentPage() {
         {tab === "blueprint" && result && (
           <BlueprintGenerator result={result} />
         )}
+      </div>
       </div>
     </div>
   );

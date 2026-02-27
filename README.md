@@ -29,6 +29,16 @@ OPENWEATHER_API_KEY=your_key_here npm run dev
 Supported variable names are `OPENWEATHER_API_KEY`, `OPEN_WEATHER_API_KEY`, and `OPENWEATHER_API`.
 If no key is set (or weather API fails), the app falls back to estimated climate-zone data and labels the source in the results dashboard.
 
+## Gemini assistant configuration
+
+To enable the in-app Gemini chatbot, set the Gemini API key before starting the app:
+
+```bash
+GEMINI_API_KEY=your_key_here npm run dev
+```
+
+Do not commit your real API key to version control.
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
