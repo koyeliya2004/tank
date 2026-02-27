@@ -11,7 +11,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "lat and lon required" }, { status: 400 });
   }
 
-  const apiKey = process.env.OPENWEATHER_API_KEY;
+  const apiKey =
+    process.env.OPENWEATHER_API_KEY ||
+    process.env.OPEN_WEATHER_API_KEY ||
+    process.env.OPENWEATHER_API;
 
   if (!apiKey) {
     // Return realistic fallback data based on coordinates if no API key
