@@ -164,7 +164,7 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
           <p className="text-xs text-indigo-300 mt-2 italic">
             "Based on {weatherData.current.city} forecast: you could harvest ~{result.waterHarvest.predictiveWeeklyForecast.toFixed(0)} liters this week"
           </p>
-          <p className="text-[11px] text-indigo-400 mt-1">Data source: {weatherData.source}</p>
+          <p className="text-xs text-indigo-400 mt-1">Data source: {weatherData.source}</p>
         </div>
       )}
 
