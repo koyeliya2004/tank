@@ -18,6 +18,17 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## OpenWeather configuration
+
+To enable live weather data, add an API key before starting the app:
+
+```bash
+OPENWEATHER_API_KEY=your_key_here npm run dev
+```
+
+Supported variable names are `OPENWEATHER_API_KEY`, `OPEN_WEATHER_API_KEY`, and `OPENWEATHER_API`.
+If no key is set (or weather API fails), the app falls back to estimated climate-zone data and labels the source in the results dashboard.
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More

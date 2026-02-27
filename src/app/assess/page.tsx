@@ -33,6 +33,7 @@ export default function AssessmentPage() {
   const [weatherData, setWeatherData] = useState<null | {
     weeklyRainfallMm: number;
     current: { temp: number; humidity: number; rainfall_mm: number; description: string; city: string };
+    source: string;
   }>(null);
   const [error, setError] = useState("");
 
