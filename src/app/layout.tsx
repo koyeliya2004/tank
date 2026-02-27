@@ -20,7 +20,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "JalSetu — Groundwater Recharge & RTRWH Assessment Platform",
+  title: "JalNet — Groundwater Recharge & RTRWH Assessment Platform",
   description:
     "Powered by CGWB & IMD data. Assess rooftop rainwater harvesting feasibility, get recharge structure recommendations, cost-benefit analysis, AR visualization, and community leaderboard.",
 };

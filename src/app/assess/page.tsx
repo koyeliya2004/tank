@@ -178,7 +178,7 @@ export default function AssessmentPage() {
                 <Droplets className="w-4 h-4 text-white" />
               </div>
             </div>
-            <span className="text-sm font-semibold">JalSetu</span>
+            <span className="text-sm font-semibold">JalNet</span>
           </Link>
           <Link
             href="/"

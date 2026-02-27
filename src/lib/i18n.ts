@@ -16,7 +16,7 @@ export const LANGUAGES: { code: Language; label: string; native: string }[] = [
 
 export const translations: Record<Language, Record<string, string>> = {
   en: {
-    appName: "JalSetu - Groundwater Recharge Platform",
+    appName: "JalNet - Groundwater Recharge Platform",
     tagline: "Assess. Recharge. Sustain.",
     heroTitle: "Rainwater Harvesting & Groundwater Recharge Assessment",
     heroSubtitle: "Powered by CGWB data. For every Indian rooftop.",

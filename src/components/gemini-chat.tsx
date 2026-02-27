@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, Send, X } from "lucide-react";
+import { Bot, Send, X } from "lucide-react";
 import { MAX_GEMINI_HISTORY } from "@/lib/gemini";
 
 type ChatMessage = { id: string; role: "user" | "assistant"; content: string };
@@ -10,7 +10,7 @@ const STARTER_MESSAGE: ChatMessage = {
   id: "starter",
   role: "assistant",
   content:
-    "Hi! I’m JalSetu’s Gemini assistant. Ask me about rooftop rainwater harvesting, CGWB guidelines, or how to use this assessment.",
+    "Hi! I'm JalNet's AI assistant. Ask me about rooftop rainwater harvesting, CGWB guidelines, or how to use this assessment.",
 };
 
 let fallbackCounter = 0;
@@ -62,18 +62,18 @@ export function GeminiChat() {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data?.error || "Gemini request failed.");
+        throw new Error(data?.error || "AI request failed.");
       }
       setMessages((prev) => [
         ...prev,
-        createMessage("assistant", data.reply || "I’m not sure how to answer that yet."),
+        createMessage("assistant", data.reply || "I'm not sure how to answer that yet."),
       ]);
       setInput("");
     } catch (error) {
-      console.error("Gemini API error:", error);
+      console.error("AI API error:", error);
       setMessages((prev) => [
         ...prev,
-        createMessage("assistant", "Sorry, I couldn’t connect to the assistant. Please check your connection and try again."),
+        createMessage("assistant", "Sorry, I couldn't connect to the assistant. Please check your connection and try again."),
       ]);
     } finally {
       setSending(false);
@@ -84,10 +84,15 @@ export function GeminiChat() {
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       {open && (
         <div className="w-[320px] sm:w-[360px] bg-gray-950/95 border border-blue-700/30 rounded-3xl shadow-2xl shadow-blue-500/20 backdrop-blur-xl overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-blue-700/20">
-            <div>
-              <p className="text-sm font-semibold text-white">Gemini Assistant</p>
-              <p className="text-[11px] text-blue-300/80">Ask about rainwater harvesting</p>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-blue-700/20 bg-gradient-to-r from-blue-900/40 to-cyan-900/20">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-400 flex items-center justify-center shadow shadow-blue-500/30">
+                <Bot className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-white">AI Assistant</p>
+                <p className="text-[11px] text-blue-300/80">Ask about rainwater harvesting</p>
+              </div>
             </div>
             <button
               type="button"
@@ -150,8 +155,8 @@ export function GeminiChat() {
         onClick={() => setOpen((prev) => !prev)}
         className="flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-3 shadow-xl shadow-blue-600/30 hover:shadow-blue-500/40 transition"
       >
-        <MessageCircle className="w-4 h-4" />
-        <span className="text-sm font-semibold">{open ? "Hide Assistant" : "Chat with Gemini"}</span>
+        <Bot className="w-4 h-4" />
+        <span className="text-sm font-semibold">{open ? "Hide Assistant" : "Chat with AI"}</span>
       </button>
     </div>
   );
