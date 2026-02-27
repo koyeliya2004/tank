@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import { LangProvider } from "@/components/lang-context";
 
-const geistSans = Geist({
+const geistSans = localFont({
+  src: "./fonts/GeistVF.woff2",
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  weight: "100 900",
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: "./fonts/GeistMonoVF.woff2",
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: "100 900",
 });
 
 export const metadata: Metadata = {
@@ -27,12 +30,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
-        />
-      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LangProvider>
           {children}
