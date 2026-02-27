@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { MAX_GEMINI_HISTORY } from "@/lib/gemini";
 
 type HistoryMessage = { role: "user" | "assistant"; content: string };
 
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     const safeHistory = Array.isArray(history) ? (history as HistoryMessage[]) : [];
-    const contents = safeHistory.slice(-6).map((entry) => ({
+    const contents = safeHistory.slice(-MAX_GEMINI_HISTORY).map((entry) => ({
       role: entry.role === "assistant" ? "model" : "user",
       parts: [{ text: entry.content }],
     }));
@@ -29,10 +30,13 @@ export async function POST(request: Request) {
     contents.push({ role: "user", parts: [{ text: message }] });
 
     const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
+        },
         body: JSON.stringify({
           contents,
           systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
@@ -54,7 +58,8 @@ export async function POST(request: Request) {
       "I’m not sure how to answer that yet.";
 
     return NextResponse.json({ reply });
-  } catch {
+  } catch (error) {
+    console.error("Gemini API error:", error);
     return NextResponse.json({ error: "Unexpected error contacting Gemini." }, { status: 500 });
   }
 }

@@ -2,21 +2,40 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, Send, X } from "lucide-react";
+import { MAX_GEMINI_HISTORY } from "@/lib/gemini";
 
-type ChatMessage = { role: "user" | "assistant"; content: string };
+type ChatMessage = { id: string; role: "user" | "assistant"; content: string };
 
 const STARTER_MESSAGE: ChatMessage = {
+  id: "starter",
   role: "assistant",
   content:
     "Hi! I’m JalSetu’s Gemini assistant. Ask me about rooftop rainwater harvesting, CGWB guidelines, or how to use this assessment.",
 };
+
+let fallbackCounter = 0;
+
+const createFallbackId = () => {
+  fallbackCounter += 1;
+  if (globalThis.crypto?.getRandomValues) {
+    const bytes = new Uint8Array(16);
+    globalThis.crypto.getRandomValues(bytes);
+    return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+  }
+  return `${Date.now()}-${fallbackCounter}`;
+};
+
+const createMessage = (role: ChatMessage["role"], content: string): ChatMessage => ({
+  id: globalThis.crypto?.randomUUID?.() ?? createFallbackId(),
+  role,
+  content,
+});
 
 export function GeminiChat() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([STARTER_MESSAGE]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
-  const [error, setError] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,16 +48,13 @@ export function GeminiChat() {
     const trimmed = input.trim();
     if (!trimmed || sending) return;
 
-    setError("");
-    setInput("");
-    setSending(true);
-    setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
-
     try {
-      const history = messages.slice(-6).map((msg) => ({
+      const history = messages.slice(-MAX_GEMINI_HISTORY).map((msg) => ({
         role: msg.role,
         content: msg.content,
       }));
+      setSending(true);
+      setMessages((prev) => [...prev, createMessage("user", trimmed)]);
       const res = await fetch("/api/gemini", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,16 +66,14 @@ export function GeminiChat() {
       }
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.reply || "I’m not sure how to answer that yet." },
+        createMessage("assistant", data.reply || "I’m not sure how to answer that yet."),
       ]);
-    } catch {
-      setError("Unable to reach Gemini right now. Please try again shortly.");
+      setInput("");
+    } catch (error) {
+      console.error("Gemini API error:", error);
       setMessages((prev) => [
         ...prev,
-        {
-          role: "assistant",
-          content: "Sorry, I couldn’t fetch an answer just now. Please try again in a moment.",
-        },
+        createMessage("assistant", "Sorry, I couldn’t connect to the assistant. Please check your connection and try again."),
       ]);
     } finally {
       setSending(false);
@@ -86,9 +100,9 @@ export function GeminiChat() {
           </div>
 
           <div className="max-h-[360px] overflow-y-auto px-4 py-4 space-y-3 text-sm">
-            {messages.map((message, index) => (
+            {messages.map((message) => (
               <div
-                key={`${message.role}-${index}`}
+                key={message.id}
                 className={`rounded-2xl px-3.5 py-2.5 leading-relaxed ${
                   message.role === "user"
                     ? "bg-blue-600 text-white ml-8"
@@ -102,7 +116,6 @@ export function GeminiChat() {
           </div>
 
           <div className="border-t border-blue-700/20 px-4 py-3 space-y-2">
-            {error && <p className="text-[11px] text-red-300">{error}</p>}
             <div className="flex items-center gap-2">
               <textarea
                 value={input}
@@ -114,6 +127,7 @@ export function GeminiChat() {
                   }
                 }}
                 rows={1}
+                aria-label="Chat message"
                 placeholder="Type your question..."
                 className="flex-1 resize-none rounded-2xl bg-blue-950/40 border border-blue-700/30 px-3 py-2 text-xs text-white placeholder:text-blue-400/70 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
               />

@@ -26,17 +26,26 @@ const STATES = [
 
 type Tab = "assess" | "results" | "leaderboard" | "marketplace" | "subsidy" | "blueprint";
 
+const RESULT_TABS: Tab[] = ["results", "marketplace", "subsidy", "blueprint"];
+const VALID_TABS: Tab[] = ["assess", "results", "leaderboard", "marketplace", "subsidy", "blueprint"];
+
+const getValidTab = (value: string | null, allowResultTabs: boolean): Tab => {
+  if (!value || !VALID_TABS.includes(value as Tab)) {
+    return "assess";
+  }
+  const tab = value as Tab;
+  if (!allowResultTabs && RESULT_TABS.includes(tab)) {
+    return "assess";
+  }
+  return tab;
+};
+
 export default function AssessmentPage() {
   const { t } = useLang();
 
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
-  const [tab, setTab] = useState<Tab>(() => {
-    if (tabParam === "leaderboard" || tabParam === "assess") {
-      return tabParam;
-    }
-    return "assess";
-  });
+  const [tab, setTab] = useState<Tab>(() => getValidTab(tabParam, false));
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AssessmentResult | null>(null);
   const [weatherData, setWeatherData] = useState<null | {
@@ -60,10 +69,10 @@ export default function AssessmentPage() {
   const [existingBorewell, setExistingBorewell] = useState(false);
 
   useEffect(() => {
-    if (tabParam === "leaderboard" || tabParam === "assess") {
-      setTab(tabParam);
+    if (tabParam) {
+      setTab(getValidTab(tabParam, Boolean(result)));
     }
-  }, [tabParam]);
+  }, [tabParam, result]);
 
   const handleLocationSelect = (newLat: number, newLon: number, addr: string, detectedArea?: number) => {
     setLat(newLat);
@@ -180,7 +189,12 @@ export default function AssessmentPage() {
           </Link>
         </div>
         <div className="max-w-3xl mx-auto px-3">
-          <div className="flex gap-1.5 overflow-x-auto pb-2.5 scrollbar-hide">
+          <div
+            className="flex gap-1.5 overflow-x-auto pb-2.5 scrollbar-hide"
+            role="tablist"
+            aria-label="Assessment sections"
+            aria-orientation="horizontal"
+          >
             {tabs.map((tab_) => (
               <button
                 key={tab_.id}
@@ -189,6 +203,10 @@ export default function AssessmentPage() {
                   setTab(tab_.id);
                 }}
                 disabled={!!(tab_.needsResult && !result)}
+                role="tab"
+                id={`tab-${tab_.id}`}
+                aria-controls={`tab-panel-${tab_.id}`}
+                aria-selected={tab === tab_.id}
                 className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all shrink-0 ${
                   tab === tab_.id
                     ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-600/20"
@@ -208,7 +226,8 @@ export default function AssessmentPage() {
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Assessment Tab */}
         {tab === "assess" && (
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <div id="tab-panel-assess" role="tabpanel" aria-labelledby="tab-assess">
+            <form onSubmit={handleSubmit} className="space-y-6">
             <div className="text-center mb-4">
               <h1 className="text-2xl font-bold text-white">RTRWH Feasibility Assessment</h1>
               <p className="text-blue-300/80 text-sm mt-2">
@@ -348,12 +367,13 @@ export default function AssessmentPage() {
                 <>{t("calculateBtn")} <ChevronRight className="w-5 h-5" /></>
               )}
             </button>
-          </form>
+            </form>
+          </div>
         )}
 
         {/* Results Tab */}
         {tab === "results" && result && (
-          <div className="space-y-6">
+          <div id="tab-panel-results" role="tabpanel" aria-labelledby="tab-results" className="space-y-6">
             <ResultsDashboard result={result} weatherData={weatherData} />
             <div className="glow-card bg-blue-950/30 border border-blue-700/20 rounded-2xl p-5">
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
@@ -383,24 +403,34 @@ export default function AssessmentPage() {
         )}
 
         {/* Leaderboard Tab */}
-        {tab === "leaderboard" && <Leaderboard />}
+        {tab === "leaderboard" && (
+          <div id="tab-panel-leaderboard" role="tabpanel" aria-labelledby="tab-leaderboard">
+            <Leaderboard />
+          </div>
+        )}
 
         {/* Marketplace Tab */}
         {tab === "marketplace" && result && (
-          <Marketplace state={result.input.state} lat={result.input.lat} lon={result.input.lon} />
+          <div id="tab-panel-marketplace" role="tabpanel" aria-labelledby="tab-marketplace">
+            <Marketplace state={result.input.state} lat={result.input.lat} lon={result.input.lon} />
+          </div>
         )}
 
         {/* Subsidy Tab */}
         {tab === "subsidy" && result && (
-          <SubsidyTracker
-            state={result.input.state}
-            totalCost={result.costBenefit.totalInstallationCost}
-          />
+          <div id="tab-panel-subsidy" role="tabpanel" aria-labelledby="tab-subsidy">
+            <SubsidyTracker
+              state={result.input.state}
+              totalCost={result.costBenefit.totalInstallationCost}
+            />
+          </div>
         )}
 
         {/* Blueprint Tab */}
         {tab === "blueprint" && result && (
-          <BlueprintGenerator result={result} />
+          <div id="tab-panel-blueprint" role="tabpanel" aria-labelledby="tab-blueprint">
+            <BlueprintGenerator result={result} />
+          </div>
         )}
       </div>
       </div>
