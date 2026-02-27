@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Suspense fallback={null}>
+        <Suspense fallback={<div className="sr-only">Loading...</div>}>
           <LangProvider>
             {children}
             <GeminiChat />
