@@ -133,9 +133,9 @@ export default function AssessmentPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-950 via-blue-950/50 to-gray-950">
       {/* Tab navigation */}
-      <div className="sticky top-0 z-30 bg-gray-950/90 backdrop-blur border-b border-blue-800/30">
+      <div className="sticky top-0 z-30 bg-gray-950/80 backdrop-blur-xl border-b border-blue-800/20">
         <div className="max-w-3xl mx-auto px-3">
-          <div className="flex gap-1 overflow-x-auto py-2 scrollbar-hide">
+          <div className="flex gap-1.5 overflow-x-auto py-2.5 scrollbar-hide">
             {tabs.map((tab_) => (
               <button
                 key={tab_.id}
@@ -144,12 +144,12 @@ export default function AssessmentPage() {
                   setTab(tab_.id);
                 }}
                 disabled={!!(tab_.needsResult && !result)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition shrink-0 ${
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all shrink-0 ${
                   tab === tab_.id
-                    ? "bg-blue-600 text-white"
+                    ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-600/20"
                     : tab_.needsResult && !result
                       ? "text-blue-800 cursor-not-allowed"
-                      : "text-blue-300 hover:bg-blue-900/40 hover:text-white"
+                      : "text-blue-300 hover:bg-blue-900/30 hover:text-white"
                 }`}
               >
                 <span>{tab_.emoji}</span>
@@ -160,26 +160,29 @@ export default function AssessmentPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 py-6">
+      <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Assessment Tab */}
         {tab === "assess" && (
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="text-center mb-2">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="text-center mb-4">
               <h1 className="text-2xl font-bold text-white">RTRWH Feasibility Assessment</h1>
-              <p className="text-blue-300 text-sm mt-1">
+              <p className="text-blue-300/80 text-sm mt-2">
                 Enter your details to assess rooftop rainwater harvesting potential
               </p>
             </div>
 
             {error && (
-              <div className="bg-red-900/30 border border-red-600/40 text-red-300 text-sm p-3 rounded-xl">
-                {error}
+              <div className="bg-red-900/20 border border-red-500/30 text-red-300 text-sm p-3.5 rounded-2xl flex items-center gap-2">
+                <span className="text-red-400">⚠</span> {error}
               </div>
             )}
 
             {/* Personal Info */}
-            <div className="bg-blue-950/40 border border-blue-700/30 rounded-2xl p-4 space-y-3">
-              <h2 className="text-sm font-semibold text-blue-200 uppercase tracking-wider">Personal Details</h2>
+            <div className="glow-card bg-blue-950/30 border border-blue-700/20 rounded-2xl p-5 space-y-4">
+              <h2 className="text-sm font-semibold text-blue-200 uppercase tracking-wider flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-blue-500/15 flex items-center justify-center text-xs">👤</span>
+                Personal Details
+              </h2>
               <div>
                 <label className="text-sm text-blue-200">{t("nameLabel")} *</label>
                 <input
@@ -187,7 +190,7 @@ export default function AssessmentPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="w-full mt-1 bg-blue-900/40 border border-blue-600/40 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full mt-1.5 bg-blue-900/30 border border-blue-600/30 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all placeholder:text-blue-500/50"
                   placeholder="Your full name"
                 />
               </div>
@@ -199,7 +202,7 @@ export default function AssessmentPage() {
                   max={100}
                   value={dwellers}
                   onChange={(e) => setDwellers(parseInt(e.target.value) || 1)}
-                  className="w-full mt-1 bg-blue-900/40 border border-blue-600/40 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full mt-1.5 bg-blue-900/30 border border-blue-600/30 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all"
                 />
               </div>
               <div>
@@ -207,7 +210,7 @@ export default function AssessmentPage() {
                 <select
                   value={state}
                   onChange={(e) => setState(e.target.value)}
-                  className="w-full mt-1 bg-blue-900/40 border border-blue-600/40 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full mt-1.5 bg-blue-900/30 border border-blue-600/30 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all"
                 >
                   <option value="">Select or auto-detected from map</option>
                   {STATES.map((s) => (
@@ -218,11 +221,12 @@ export default function AssessmentPage() {
             </div>
 
             {/* Map + Roof */}
-            <div className="bg-blue-950/40 border border-blue-700/30 rounded-2xl p-4 space-y-3">
-              <h2 className="text-sm font-semibold text-blue-200 uppercase tracking-wider">
+            <div className="glow-card bg-blue-950/30 border border-blue-700/20 rounded-2xl p-5 space-y-4">
+              <h2 className="text-sm font-semibold text-blue-200 uppercase tracking-wider flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-blue-500/15 flex items-center justify-center text-xs">📍</span>
                 Location & Roof Details
               </h2>
-              <p className="text-xs text-blue-400">
+              <p className="text-xs text-blue-400/80">
                 Drop a pin on the map to auto-detect your aquifer, rainfall data and location.
                 Use the CV button to detect roof area from satellite imagery.
               </p>
@@ -237,7 +241,7 @@ export default function AssessmentPage() {
                 <select
                   value={roofMaterial}
                   onChange={(e) => setRoofMaterial(e.target.value)}
-                  className="w-full mt-1 bg-blue-900/40 border border-blue-600/40 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full mt-1.5 bg-blue-900/30 border border-blue-600/30 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all"
                 >
                   {Object.keys(RUNOFF_COEFFICIENTS).map((m) => (
                     <option key={m} value={m}>{m} (coeff: {RUNOFF_COEFFICIENTS[m]})</option>
@@ -247,11 +251,14 @@ export default function AssessmentPage() {
             </div>
 
             {/* Open Space + Options */}
-            <div className="bg-blue-950/40 border border-blue-700/30 rounded-2xl p-4 space-y-3">
-              <h2 className="text-sm font-semibold text-blue-200 uppercase tracking-wider">Site Details</h2>
+            <div className="glow-card bg-blue-950/30 border border-blue-700/20 rounded-2xl p-5 space-y-4">
+              <h2 className="text-sm font-semibold text-blue-200 uppercase tracking-wider flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-blue-500/15 flex items-center justify-center text-xs">🏗️</span>
+                Site Details
+              </h2>
               <div>
                 <label className="text-sm text-blue-200">{t("openSpaceLabel")}</label>
-                <p className="text-xs text-blue-400 mt-0.5 mb-1">
+                <p className="text-xs text-blue-400/80 mt-0.5 mb-1.5">
                   Garden, courtyard, or vacant land available for recharge structures
                 </p>
                 <input
@@ -259,28 +266,28 @@ export default function AssessmentPage() {
                   min={0}
                   value={openSpaceArea}
                   onChange={(e) => setOpenSpaceArea(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-blue-900/40 border border-blue-600/40 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full bg-blue-900/30 border border-blue-600/30 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all placeholder:text-blue-500/50"
                   placeholder="e.g. 50"
                 />
               </div>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 text-sm text-blue-200 cursor-pointer">
+              <div className="flex gap-5">
+                <label className="flex items-center gap-2.5 text-sm text-blue-200 cursor-pointer group">
                   <input
                     type="checkbox"
                     checked={existingBorewell}
                     onChange={(e) => setExistingBorewell(e.target.checked)}
-                    className="w-4 h-4 rounded text-blue-500"
+                    className="w-4 h-4 rounded text-blue-500 accent-blue-500"
                   />
-                  {t("borewellLabel")}
+                  <span className="group-hover:text-white transition-colors">{t("borewellLabel")}</span>
                 </label>
-                <label className="flex items-center gap-2 text-sm text-blue-200 cursor-pointer">
+                <label className="flex items-center gap-2.5 text-sm text-blue-200 cursor-pointer group">
                   <input
                     type="checkbox"
                     checked={storageAvailable}
                     onChange={(e) => setStorageAvailable(e.target.checked)}
-                    className="w-4 h-4 rounded text-blue-500"
+                    className="w-4 h-4 rounded text-blue-500 accent-blue-500"
                   />
-                  {t("storageLabel")}
+                  <span className="group-hover:text-white transition-colors">{t("storageLabel")}</span>
                 </label>
               </div>
             </div>
@@ -288,7 +295,7 @@ export default function AssessmentPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl transition text-base"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-2xl transition-all text-base shadow-xl shadow-blue-600/20 hover:shadow-blue-500/30 hover:-translate-y-0.5"
             >
               {loading ? (
                 <><Loader2 className="w-5 h-5 animate-spin" /> Running CGWB Assessment...</>
@@ -303,20 +310,20 @@ export default function AssessmentPage() {
         {tab === "results" && result && (
           <div className="space-y-6">
             <ResultsDashboard result={result} weatherData={weatherData} />
-            <div className="bg-blue-950/40 border border-blue-700/30 rounded-2xl p-4">
+            <div className="glow-card bg-blue-950/30 border border-blue-700/20 rounded-2xl p-5">
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                 🌍 {t("geologicalTwin")}
               </h2>
-              <p className="text-sm text-blue-300 mb-3">
+              <p className="text-sm text-blue-300/80 mb-4">
                 3D subsurface visualization of the aquifer beneath your location
               </p>
               <GeologicalTwin aquifer={result.aquifer} />
             </div>
-            <div className="bg-blue-950/40 border border-blue-700/30 rounded-2xl p-4">
+            <div className="glow-card bg-blue-950/30 border border-blue-700/20 rounded-2xl p-5">
               <h2 className="text-xl font-bold text-white mb-4">
                 🥽 {t("arView")} — Augmented Reality Placement
               </h2>
-              <p className="text-sm text-blue-300 mb-3">
+              <p className="text-sm text-blue-300/80 mb-4">
                 Point your camera at your yard to see where the recharge pit would fit
               </p>
               {result.structures.length > 0 && (
