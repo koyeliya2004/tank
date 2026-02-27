@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import localFont from "next/font/local";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
@@ -32,10 +33,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <LangProvider>
-          {children}
-          <GeminiChat />
-        </LangProvider>
+        <Suspense fallback={null}>
+          <LangProvider>
+            {children}
+            <GeminiChat />
+          </LangProvider>
+        </Suspense>
         <VisualEditsMessenger />
       </body>
     </html>
