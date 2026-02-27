@@ -344,20 +344,20 @@ nextjs-portal {
   animation: surface-ripple ease-out infinite;
 }
 
-/* Wave motion at bottom */
+/* Wave motion at bottom — transform-based for cross-browser support */
 @keyframes wave-motion-1 {
-  0% { d: path("M0,30 C240,0 480,60 720,30 C960,0 1200,60 1440,30 L1440,60 L0,60 Z"); }
-  50% { d: path("M0,25 C300,55 600,5 900,35 C1100,55 1300,15 1440,25 L1440,60 L0,60 Z"); }
-  100% { d: path("M0,30 C240,0 480,60 720,30 C960,0 1200,60 1440,30 L1440,60 L0,60 Z"); }
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-20px); }
+  100% { transform: translateX(0); }
 }
 .animate-wave-1 {
   animation: wave-motion-1 6s ease-in-out infinite;
 }
 
 @keyframes wave-motion-2 {
-  0% { d: path("M0,40 C360,15 720,55 1080,35 C1260,25 1350,45 1440,40 L1440,60 L0,60 Z"); }
-  50% { d: path("M0,35 C300,50 660,20 1020,45 C1200,30 1380,50 1440,35 L1440,60 L0,60 Z"); }
-  100% { d: path("M0,40 C360,15 720,55 1080,35 C1260,25 1350,45 1440,40 L1440,60 L0,60 Z"); }
+  0% { transform: translateX(0); }
+  50% { transform: translateX(15px); }
+  100% { transform: translateX(0); }
 }
 .animate-wave-2 {
   animation: wave-motion-2 8s ease-in-out infinite;
