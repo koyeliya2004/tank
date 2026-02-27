@@ -205,9 +205,29 @@ nextjs-portal {
 
 /* Water drop ripple effect */
 @keyframes ripple {
-  0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.3); }
-  100% { box-shadow: 0 0 0 20px rgba(59, 130, 246, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.3); }
+  100% { box-shadow: 0 0 0 20px rgba(6, 182, 212, 0); }
 }
 .ripple-effect {
   animation: ripple 2s ease-out infinite;
+}
+
+/* Bubble rising animation for groundwater background */
+@keyframes bubble-rise {
+  0% { transform: translateY(0) scale(1); opacity: 0.4; }
+  50% { opacity: 0.6; }
+  100% { transform: translateY(-100vh) scale(1.3); opacity: 0; }
+}
+.animate-bubble {
+  animation: bubble-rise linear infinite;
+}
+
+/* Slow ping for concentric rings */
+@keyframes ping-slow {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  70% { transform: scale(1.1); opacity: 0.1; }
+  100% { transform: scale(0.8); opacity: 0.5; }
+}
+.animate-ping-slow {
+  animation: ping-slow ease-in-out infinite;
 }

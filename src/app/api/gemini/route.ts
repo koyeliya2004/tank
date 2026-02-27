@@ -4,7 +4,7 @@ import { MAX_GEMINI_HISTORY } from "@/lib/gemini";
 type HistoryMessage = { role: "user" | "assistant"; content: string };
 
 const SYSTEM_PROMPT =
-  "You are JalSetu’s assistant for rooftop rainwater harvesting. Provide concise, friendly guidance grounded in CGWB best practices and the JalSetu app features.";
+  "You are JalNet's AI assistant for rooftop rainwater harvesting. Provide concise, friendly guidance grounded in CGWB best practices and the JalNet app features.";
 
 export async function POST(request: Request) {
   try {
@@ -13,53 +13,53 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Message is required." }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Gemini API key is not configured. Set GEMINI_API_KEY in the environment." },
+        { error: "AI API key is not configured. Set GROQ_API_KEY in the environment." },
         { status: 500 }
       );
     }
 
     const safeHistory = Array.isArray(history) ? (history as HistoryMessage[]) : [];
-    const contents = safeHistory.slice(-MAX_GEMINI_HISTORY).map((entry) => ({
-      role: entry.role === "assistant" ? "model" : "user",
-      parts: [{ text: entry.content }],
-    }));
+    const messages = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...safeHistory.slice(-MAX_GEMINI_HISTORY).map((entry) => ({
+        role: entry.role,
+        content: entry.content,
+      })),
+      { role: "user", content: message },
+    ];
 
-    contents.push({ role: "user", parts: [{ text: message }] });
-
-    const geminiResponse = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+    const groqResponse = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
+          "Authorization": `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          contents,
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          generationConfig: {
-            temperature: 0.3,
-            maxOutputTokens: 512,
-          },
+          model: "llama-3.3-70b-versatile",
+          messages,
+          temperature: 0.3,
+          max_tokens: 512,
         }),
       }
     );
 
-    if (!geminiResponse.ok) {
-      return NextResponse.json({ error: "Gemini request failed." }, { status: 502 });
+    if (!groqResponse.ok) {
+      return NextResponse.json({ error: "AI request failed." }, { status: 502 });
     }
 
-    const data = await geminiResponse.json();
+    const data = await groqResponse.json();
     const reply =
-      data?.candidates?.[0]?.content?.parts?.map((part: { text?: string }) => part.text).join("") ||
-      "I’m not sure how to answer that yet.";
+      data?.choices?.[0]?.message?.content ||
+      "I'm not sure how to answer that yet.";
 
     return NextResponse.json({ reply });
   } catch (error) {
-    console.error("Gemini API error:", error);
-    return NextResponse.json({ error: "Unexpected error contacting Gemini." }, { status: 500 });
+    console.error("Groq API error:", error);
+    return NextResponse.json({ error: "Unexpected error contacting AI." }, { status: 500 });
   }
 }

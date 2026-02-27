@@ -20,7 +20,7 @@ export function BlueprintGenerator({ result }: BlueprintProps) {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
-    doc.text("JalSetu - RTRWH & Artificial Recharge Blueprint", pageW / 2, y, { align: "center" });
+    doc.text("JalNet - RTRWH & Artificial Recharge Blueprint", pageW / 2, y, { align: "center" });
     y += 10;
     doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
@@ -170,7 +170,7 @@ export function BlueprintGenerator({ result }: BlueprintProps) {
       { align: "center" }
     );
 
-    doc.save(`JalSetu_RTRWH_Blueprint_${result.input.name.replace(/\s+/g, "_")}.pdf`);
+    doc.save(`JalNet_RTRWH_Blueprint_${result.input.name.replace(/\s+/g, "_")}.pdf`);
   };
 
   return (
