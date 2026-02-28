@@ -1,9 +1,10 @@
 "use client";
 import { AssessmentResult } from "@/lib/feasibility-engine";
+import { computeHarvestFromRainfall, computeConfidenceScore } from "@/lib/harvest-utils";
 import { useLang } from "./lang-context";
 import {
-  Droplets, TrendingUp, AlertTriangle, CheckCircle, Info,
-  DollarSign, Layers, CloudRain, Activity, Zap
+  Droplets, AlertTriangle, CheckCircle, Info,
+  DollarSign, Layers, CloudRain, Activity, Zap, ShieldCheck
 } from "lucide-react";
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer,
@@ -14,8 +15,9 @@ interface ResultsDashboardProps {
   result: AssessmentResult;
   weatherData: {
     weeklyRainfallMm: number;
-    current: { temp: number; humidity: number; rainfall_mm: number; description: string; city: string };
+    current: { temp: number; humidity: number | null; rainfall_mm: number; description: string; city: string };
     source: string;
+    fallback?: boolean;
   } | null;
 }
 
@@ -32,6 +34,30 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
     cat === "Semi-Critical" ? "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" :
     cat === "Critical" ? "bg-orange-500/20 text-orange-300 border-orange-500/30" :
     "bg-red-500/20 text-red-300 border-red-500/30";
+
+  // Confidence score computation
+  const apiFreshness = weatherData ? (weatherData.fallback ? 0.5 : 1.0) : 0.3;
+  const datasetCoverage = result.meta?.datasetCoverage ?? 0.5;
+  const noFallbackUsed = (result.meta?.taRecordFound !== false) ? 1.0 : 0.5;
+  const confidenceScore = computeConfidenceScore({ apiFreshness, datasetCoverage, noFallbackUsed });
+
+  // Forecast harvest: use actual weather data when available
+  const runoffCoeff = result.waterHarvest.runoffCoefficient;
+  const forecastHarvestLiters = weatherData
+    ? computeHarvestFromRainfall(weatherData.weeklyRainfallMm, result.input.roofArea, runoffCoeff)
+    : result.waterHarvest.predictiveWeeklyForecast;
+
+  // Dynamic cost from meta or fallback to computed
+  const costRate = result.meta?.costRate ?? 120;
+  const dynamicCost = result.meta?.dynamicCost ?? result.input.roofArea * costRate;
+
+  // Aquifer annotation with source and confidence
+  const aquiferAnnotatedName = `${result.aquiferInfo.name} (CGWB${result.meta?.taRecordFound ? " + TA dataset" : ""}, ${confidenceScore}% confidence)`;
+
+  // API-derived forecast phrase
+  const forecastPhrase = weatherData
+    ? `Based on ${weatherData.current.city} forecast (${weatherData.current.description ?? "current conditions"}): you could harvest ~${forecastHarvestLiters.toFixed(0)} liters this week`
+    : `Based on historical average: estimated ~${forecastHarvestLiters.toFixed(0)} liters this week`;
 
   const radarData = [
     { metric: "Rainfall", value: Math.min(100, result.rainfall.annualRainfall / 30) },
@@ -66,11 +92,23 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
             For {result.input.name} at {result.input.location}
           </p>
         </div>
-        <div className="flex items-center gap-2 bg-blue-900/40 border border-blue-500/30 rounded-xl px-4 py-2">
-          <Droplets className="w-5 h-5 text-blue-400" />
-          <div>
-            <div className="text-xs text-blue-300">{t("waterCredits")}</div>
-            <div className="text-lg font-bold text-blue-200">💧 {result.waterCredits.toLocaleString()}</div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2 bg-blue-900/40 border border-blue-500/30 rounded-xl px-4 py-2">
+            <Droplets className="w-5 h-5 text-blue-400" />
+            <div>
+              <div className="text-xs text-blue-300">{t("waterCredits")}</div>
+              <div className="text-lg font-bold text-blue-200">💧 {result.waterCredits.toLocaleString()}</div>
+            </div>
+          </div>
+          <div
+            className="flex items-center gap-2 bg-emerald-900/30 border border-emerald-500/30 rounded-xl px-4 py-2"
+            title={`API freshness: ${(apiFreshness * 100).toFixed(0)}% · Dataset coverage: ${(datasetCoverage * 100).toFixed(0)}% · TA record: ${result.meta?.taRecordFound ? "found" : "not found"}`}
+          >
+            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+            <div>
+              <div className="text-xs text-emerald-300">Data Accuracy</div>
+              <div className="text-lg font-bold text-emerald-200">{confidenceScore}%</div>
+            </div>
           </div>
         </div>
       </div>
@@ -148,7 +186,9 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
             </div>
             <div>
               <div className="text-xs text-indigo-300">Humidity</div>
-              <div className="text-lg font-bold text-white">{weatherData.current.humidity}%</div>
+              <div className="text-lg font-bold text-white">
+                {weatherData.current.humidity != null ? `${weatherData.current.humidity}%` : "—"}
+              </div>
             </div>
             <div>
               <div className="text-xs text-indigo-300">7-Day Rainfall</div>
@@ -157,14 +197,16 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
             <div>
               <div className="text-xs text-indigo-300">Forecast Harvest</div>
               <div className="text-lg font-bold text-emerald-300">
-                {result.waterHarvest.predictiveWeeklyForecast.toFixed(0)} L
+                {forecastHarvestLiters.toFixed(0)} L
               </div>
             </div>
           </div>
           <p className="text-xs text-indigo-300 mt-2 italic">
-            &ldquo;Based on {weatherData.current.city} forecast: you could harvest ~{result.waterHarvest.predictiveWeeklyForecast.toFixed(0)} liters this week&rdquo;
+            &ldquo;{forecastPhrase}&rdquo;
           </p>
-          <p className="text-xs text-indigo-400 mt-1">Data source: {weatherData.source}</p>
+          <p className="text-xs text-indigo-400 mt-1">
+            Data source: {weatherData.source}{weatherData.fallback ? " (estimated)" : ""}
+          </p>
         </div>
       )}
 
@@ -177,7 +219,7 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           <div>
             <div className="text-xs text-slate-400">Aquifer Name</div>
-            <div className="text-sm font-semibold text-white mt-0.5">{result.aquiferInfo.name}</div>
+            <div className="text-sm font-semibold text-white mt-0.5">{aquiferAnnotatedName}</div>
           </div>
           <div>
             <div className="text-xs text-slate-400">Depth to Water Table</div>
@@ -334,6 +376,11 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
             <div className="text-lg font-bold text-white">₹{result.costBenefit.totalInstallationCost.toLocaleString()}</div>
           </div>
           <div>
+            <div className="text-xs text-slate-400">Dynamic Roof Cost</div>
+            <div className="text-lg font-bold text-white">₹{dynamicCost.toLocaleString()}</div>
+            <div className="text-xs text-slate-500">@ ₹{costRate}/m²</div>
+          </div>
+          <div>
             <div className="text-xs text-slate-400">Annual Maintenance</div>
             <div className="text-lg font-bold text-orange-300">₹{result.costBenefit.annualMaintenanceCost.toLocaleString()}</div>
           </div>
@@ -363,6 +410,7 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
             <BarChart
               data={[
                 { name: "Installation", amount: result.costBenefit.totalInstallationCost },
+                { name: "Roof Cost", amount: dynamicCost },
                 { name: "Annual Maint.", amount: result.costBenefit.annualMaintenanceCost },
                 { name: "Water Value", amount: result.costBenefit.annualWaterValueINR },
               ]}

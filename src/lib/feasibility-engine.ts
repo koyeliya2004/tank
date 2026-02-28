@@ -7,6 +7,7 @@ import {
   RUNOFF_COEFFICIENTS,
   RECHARGE_STRUCTURE_PARAMS,
 } from "./groundwater-data";
+import { computeHarvestFromRainfall } from "./harvest-utils";
 
 export interface AssessmentInput {
   name: string;
@@ -74,6 +75,14 @@ export interface AssessmentResult {
   };
   waterCredits: number;
   impactEquivalent: string;
+  /** Server-side meta: cost rate, TA dataset info, and coverage */
+  meta?: {
+    costRate: number;
+    dynamicCost: number;
+    taDatasetCount: number;
+    datasetCoverage: number;
+    taRecordFound: boolean;
+  };
 }
 
 export function runFeasibilityAssessment(
@@ -85,14 +94,21 @@ export function runFeasibilityAssessment(
 
   // Annual harvestable volume = Roof Area × Annual Rainfall × Runoff Coefficient × First Flush Deduction
   const firstFlushDeduction = 0.95; // lose ~5% for first flush
-  const annualHarvestable = input.roofArea * (rainfall.annualRainfall / 1000) * runoffCoeff * firstFlushDeduction * 1000; // liters
-  const monsoonHarvest = input.roofArea * (rainfall.monsoonRainfall / 1000) * runoffCoeff * firstFlushDeduction * 1000;
+  const annualHarvestable = computeHarvestFromRainfall(
+    rainfall.annualRainfall, input.roofArea, runoffCoeff, firstFlushDeduction
+  );
+  const monsoonHarvest = computeHarvestFromRainfall(
+    rainfall.monsoonRainfall, input.roofArea, runoffCoeff, firstFlushDeduction
+  );
   const dailyAverage = annualHarvestable / 365;
   const perPersonPerDay = dailyAverage / input.dwellers;
 
-  // Predictive weekly forecast - using next 7 days average rainfall (simulated; real: from OpenWeather)
+  // Predictive weekly forecast - using average daily rainfall × 7 days
+  // (actual forecast harvest is computed client-side from real weather data when available)
   const avgDailyRainfall = rainfall.annualRainfall / 365;
-  const predictiveWeeklyForecast = input.roofArea * (avgDailyRainfall * 7 / 1000) * runoffCoeff * firstFlushDeduction * 1000;
+  const predictiveWeeklyForecast = computeHarvestFromRainfall(
+    avgDailyRainfall * 7, input.roofArea, runoffCoeff, firstFlushDeduction
+  );
 
   // Feasibility score
   let score = 50;
