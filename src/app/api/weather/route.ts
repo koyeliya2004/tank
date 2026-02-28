@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
   if (!apiKey) {
     // Return realistic fallback data based on coordinates if no API key
-    return NextResponse.json(getFallbackWeather(parseFloat(lat), parseFloat(lon)));
+    return NextResponse.json({ ...getFallbackWeather(parseFloat(lat), parseFloat(lon)), fallback: true });
   }
 
   try {
@@ -42,23 +42,24 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       current: {
         temp: currentData.main?.temp,
-        humidity: currentData.main?.humidity,
-        rainfall_mm: currentData.rain?.["1h"] || 0,
+        humidity: currentData.main?.humidity ?? null,
+        rainfall_mm: currentData.rain?.["1h"] ?? currentData.rain?.["3h"] ?? 0,
         description: currentData.weather?.[0]?.description,
         city: currentData.name,
       },
       forecast: forecastData.list?.slice(0, 16).map((item: { dt: number; main: { temp: number }; rain?: { "3h"?: number }; weather: { description: string }[] }) => ({
         datetime: item.dt,
         temp: item.main?.temp,
-        rainfall_3h: item.rain?.["3h"] || 0,
+        rainfall_3h: item.rain?.["3h"] ?? 0,
         description: item.weather?.[0]?.description,
       })),
       weeklyRainfallMm: weeklyRainfall,
       source: "OpenWeatherMap API",
+      fallback: false,
     });
   } catch (e) {
     console.error("Weather API error:", e);
-    return NextResponse.json(getFallbackWeather(parseFloat(lat), parseFloat(lon)));
+    return NextResponse.json({ ...getFallbackWeather(parseFloat(lat), parseFloat(lon)), fallback: true });
   }
 }
 

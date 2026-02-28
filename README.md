@@ -28,6 +28,39 @@ OPENWEATHER_API_KEY=your_key_here npm run dev
 
 Supported variable names are `OPENWEATHER_API_KEY`, `OPEN_WEATHER_API_KEY`, and `OPENWEATHER_API`.
 If no key is set (or weather API fails), the app falls back to estimated climate-zone data and labels the source in the results dashboard.
+A `fallback: true` flag is returned so the confidence score is lowered accordingly.
+
+## Cost rate configuration
+
+The dynamic roof-area cost can be configured via environment variable:
+
+```bash
+COST_RATE=150 npm run dev   # INR per m²
+```
+
+If not set, the default rate is **₹120 per m²**. The rate used is displayed in the Results → Cost-Benefit section.
+
+## TA dataset (thearchive/ta)
+
+District-wise ground water resources data is stored in `thearchive/ta/dt_wise_resources_2013_csv_1_1.csv`.
+Source: CGWB Dynamic Ground Water Resources of India 2013.
+
+The loader (`src/data/loadTaDataset.ts`) normalises district keys and maps CSV columns to internal fields:
+- `Annual Replenishable resources (Ham)` → `recharge`
+- `Total annual Draft (Ham)` → `draft`
+- `Stage of Ground Water Development (%)` → `extractionPercent`
+
+When a district match is found, the stage-of-extraction value from the TA dataset overrides the CGWB aquifer record.
+
+## Data Accuracy / Confidence score
+
+Each assessment result includes a **Data Accuracy** percentage (0–100%) displayed in the results header. It is computed from:
+
+| Factor | Weight | Notes |
+|--------|--------|-------|
+| `apiFreshness` | 0.5 | 1.0 for live API, 0.5 for fallback |
+| `datasetCoverage` | 0.3 | loaded districts / 644 expected |
+| `noFallbackUsed` | 0.2 | 1.0 if TA record found, 0.5 otherwise |
 
 ## Gemini assistant configuration
 

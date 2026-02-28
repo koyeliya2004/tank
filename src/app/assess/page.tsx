@@ -50,8 +50,9 @@ export default function AssessmentPage() {
   const [result, setResult] = useState<AssessmentResult | null>(null);
   const [weatherData, setWeatherData] = useState<null | {
     weeklyRainfallMm: number;
-    current: { temp: number; humidity: number; rainfall_mm: number; description: string; city: string };
+    current: { temp: number; humidity: number | null; rainfall_mm: number; description: string; city: string };
     source: string;
+    fallback?: boolean;
   }>(null);
   const [error, setError] = useState("");
 
