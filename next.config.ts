@@ -5,6 +5,10 @@ import path from "node:path";
 const loaderPath = require.resolve('orchids-visual-edits/loader.js');
 
 const nextConfig: NextConfig = {
+  env: {
+    // OpenWeatherMap API key - set OPENWEATHER_API_KEY env var in production to override
+    OPENWEATHER_API_KEY: process.env.OPENWEATHER_API_KEY ?? "9809e6d3ab834cdf502cc4d5b5f91d42",
+  },
   images: {
     remotePatterns: [
       {
