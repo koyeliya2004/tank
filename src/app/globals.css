@@ -231,3 +231,134 @@ nextjs-portal {
 .animate-ping-slow {
   animation: ping-slow ease-in-out infinite;
 }
+
+/* ===== Animated Background — Rainwater Harvesting ===== */
+
+/* Cloud drift */
+@keyframes cloud-drift {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(30px); }
+  100% { transform: translateX(0); }
+}
+.animate-cloud-drift {
+  animation: cloud-drift 12s ease-in-out infinite;
+}
+
+@keyframes cloud-drift-reverse {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-25px); }
+  100% { transform: translateX(0); }
+}
+.animate-cloud-drift-reverse {
+  animation: cloud-drift-reverse 15s ease-in-out infinite;
+}
+
+/* Lightning flash */
+@keyframes lightning-flash {
+  0%, 93%, 95%, 97%, 100% { background: transparent; }
+  94% { background: rgba(180, 210, 255, 0.04); }
+  96% { background: rgba(180, 210, 255, 0.07); }
+}
+.animate-lightning {
+  animation: lightning-flash 8s ease-in-out infinite;
+}
+
+/* SVG glow pulse on roof ridge */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; filter: drop-shadow(0 0 4px rgba(56,189,248,0.3)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 10px rgba(56,189,248,0.6)); }
+}
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Gutter fill animation */
+@keyframes gutter-fill {
+  0% { width: 0; }
+  100% { width: 210px; }
+}
+.animate-gutter-fill {
+  animation: gutter-fill 4s ease-in-out infinite alternate;
+}
+
+/* Water flowing through vertical pipe */
+@keyframes pipe-flow-v {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  60% { opacity: 1; transform: translateY(200px); }
+  61% { transform: translate(0, 200px); }
+  80% { opacity: 1; transform: translate(120px, 200px); }
+  81% { transform: translate(120px, 200px); }
+  100% { opacity: 0; transform: translate(120px, 400px); }
+}
+.animate-pipe-flow-v {
+  animation: pipe-flow-v 3s linear infinite;
+}
+
+/* Groundwater level rising */
+@keyframes groundwater-fill {
+  0% { height: 15%; opacity: 0.3; }
+  50% { height: 30%; opacity: 0.5; }
+  100% { height: 15%; opacity: 0.3; }
+}
+.animate-groundwater-fill {
+  animation: groundwater-fill 10s ease-in-out infinite;
+}
+
+/* Recharge pit water level rising */
+@keyframes pit-fill {
+  0% { height: 0; y: 350; }
+  100% { height: 280px; y: 70; }
+}
+.animate-pit-fill {
+  animation: pit-fill 8s ease-in-out infinite alternate;
+}
+
+/* Pit fill glow line */
+@keyframes pit-fill-glow {
+  0% { y: 350; opacity: 0.6; }
+  100% { y: 70; opacity: 1; }
+}
+.animate-pit-fill-glow {
+  animation: pit-fill-glow 8s ease-in-out infinite alternate;
+}
+
+/* Floating water particles */
+@keyframes float-particle {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  20% { opacity: 0.7; }
+  50% { transform: translateY(-30px) scale(1.3); opacity: 0.5; }
+  80% { opacity: 0.3; }
+  100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
+}
+.animate-float-particle {
+  animation: float-particle ease-in-out infinite;
+}
+
+/* Surface ripple where rain hits */
+@keyframes surface-ripple {
+  0% { transform: scale(0.5); opacity: 0.6; }
+  100% { transform: scale(3); opacity: 0; }
+}
+.animate-surface-ripple {
+  animation: surface-ripple ease-out infinite;
+}
+
+/* Wave motion at bottom — transform-based for cross-browser support */
+@keyframes wave-motion-1 {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-20px); }
+  100% { transform: translateX(0); }
+}
+.animate-wave-1 {
+  animation: wave-motion-1 6s ease-in-out infinite;
+}
+
+@keyframes wave-motion-2 {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(15px); }
+  100% { transform: translateX(0); }
+}
+.animate-wave-2 {
+  animation: wave-motion-2 8s ease-in-out infinite;
+}

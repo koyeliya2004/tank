@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useLang } from "@/components/lang-context";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { AnimatedBackground } from "@/components/animated-background";
 import { Waves, MapPin, TrendingUp, Shield, Users, Download, Cpu, Globe, ArrowRight, ChevronRight, Droplets, Zap, BarChart3, Leaf, Building2, CloudRain, BookOpen } from "lucide-react";
 
 const features = [
@@ -86,30 +87,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden" style={{ background: "linear-gradient(180deg, #020b18 0%, #041426 30%, #061a33 60%, #051220 100%)" }}>
-      {/* Groundwater layer background */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        {/* Deep water gradient */}
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,60,120,0.35) 0%, transparent 70%)" }} />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 40% at 30% 50%, rgba(0,40,100,0.2) 0%, transparent 60%)" }} />
-        {/* Animated water bubbles */}
-        {[...Array(18)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full border border-blue-400/10 animate-bubble"
-            style={{
-              width: `${8 + (i % 6) * 10}px`,
-              height: `${8 + (i % 6) * 10}px`,
-              left: `${(i * 13 + 5) % 98}%`,
-              bottom: `-${(i % 4) * 30}px`,
-              animationDelay: `${i * 0.7}s`,
-              animationDuration: `${6 + (i % 4) * 2}s`,
-              background: `rgba(56,189,248,${0.03 + (i % 3) * 0.02})`,
-            }}
-          />
-        ))}
-        {/* Ground layer visual */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 opacity-20" style={{ background: "linear-gradient(to top, rgba(0,80,180,0.6), transparent)" }} />
-      </div>
+      {/* Animated rainwater harvesting background */}
+      <AnimatedBackground />
 
       <div className="relative z-10">
         {/* Navbar */}
