@@ -49,8 +49,10 @@ export function ARVisualization({ rechargeDepth, rechargeWidth, rechargeLength }
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    // Ensure canvas has valid dimensions - use parent or fallback dimensions
+    const parent = canvas.parentElement;
+    canvas.width = canvas.offsetWidth || parent?.clientWidth || 400;
+    canvas.height = canvas.offsetHeight || parent?.clientHeight || 224;
 
     let frame = 0;
 
