@@ -25,20 +25,23 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
-    const legacyStored = stored ? null : window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
-    const storedValue = stored ?? legacyStored;
-    const browserLang = window.navigator.language.split("-")[0];
-    const nextLang =
-      storedValue && isLanguage(storedValue)
-        ? storedValue
-        : browserLang && isLanguage(browserLang)
-          ? browserLang
-          : null;
-    if (nextLang) {
-      setLang(nextLang);
+    try {
+      const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
+      const legacyStored = stored ? null : window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
+      const storedValue = stored ?? legacyStored;
+      const browserLang = window.navigator.language.split("-")[0];
+      const nextLang =
+        storedValue && isLanguage(storedValue)
+          ? storedValue
+          : browserLang && isLanguage(browserLang)
+            ? browserLang
+            : null;
+      if (nextLang) {
+        setLang(nextLang);
+      }
+    } finally {
+      setInitialized(true);
     }
-    setInitialized(true);
   }, []);
 
   useEffect(() => {
@@ -47,8 +50,10 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
       document.documentElement.lang = lang;
     }
     if (typeof window !== "undefined") {
-      window.localStorage.setItem(LANG_STORAGE_KEY, lang);
-      window.localStorage.removeItem(LEGACY_LANG_STORAGE_KEY);
+      try {
+        window.localStorage.setItem(LANG_STORAGE_KEY, lang);
+        window.localStorage.removeItem(LEGACY_LANG_STORAGE_KEY);
+      } catch {}
     }
   }, [initialized, lang]);
 
