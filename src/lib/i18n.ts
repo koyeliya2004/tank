@@ -277,7 +277,7 @@ export const translations: Record<Language, Record<string, string>> = {
     heroSupportingText: "भूजल पुनर्भरण भारताच्या जल सुरक्षेसाठी अत्यंत महत्त्वाचे आहे. केंद्रीय भूजल मंडळाने (CGWB) RTRWH वर वैज्ञानिक मॅन्युअल प्रकाशित केले आहेत — आता त्या अंतर्दृष्टी तुमच्या हातात, तुमच्या फोनवर आहेत.",
     statsStatesUnit: "राज्ये",
     statsCoverageLabel: "CGWB डेटा कव्हरेज",
-    statsOverExtractedLabel: "भारतीय ब्लॉक्स अति-उपसा",
+    statsOverExtractedLabel: "भारतीय ब्लॉक्स अति-दोहन",
     statsFreeLabel: "नेहमीसाठी मोफत",
     statsLanguagesUnit: "भाषा",
     statsLanguageSupportLabel: "प्रादेशिक भाषा समर्थन",
