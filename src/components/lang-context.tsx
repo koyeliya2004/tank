@@ -27,8 +27,7 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     if (typeof window === "undefined") return;
     try {
       const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
-      const legacyStored = stored ? null : window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
-      const storedValue = stored ?? legacyStored;
+      const storedValue = stored ?? window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
       const browserLang = window.navigator.language.split("-")[0];
       const nextLang =
         storedValue && isLanguage(storedValue)
