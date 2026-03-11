@@ -21,27 +21,32 @@ const isLanguage = (value: string): value is Language =>
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Language>("en");
+  const [initialized, setInitialized] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
     const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
-    if (stored && isLanguage(stored)) {
-      setLang(stored);
-      return;
+    const browserLang = window.navigator?.language?.split("-")[0] ?? "";
+    const nextLang =
+      stored && isLanguage(stored)
+        ? stored
+        : isLanguage(browserLang)
+          ? browserLang
+          : null;
+    if (nextLang) {
+      setLang(nextLang);
     }
-    const browserLang = window.navigator.language.split("-")[0];
-    if (isLanguage(browserLang)) {
-      setLang(browserLang);
-    }
+    setInitialized(true);
   }, []);
 
   useEffect(() => {
+    if (!initialized) return;
     if (typeof document !== "undefined") {
       document.documentElement.lang = lang;
     }
     if (typeof window !== "undefined") {
       window.localStorage.setItem(LANG_STORAGE_KEY, lang);
     }
-  }, [lang]);
+  }, [initialized, lang]);
 
   const value = useMemo(
     () => ({ lang, setLang, t: (key: string) => t(lang, key) }),
