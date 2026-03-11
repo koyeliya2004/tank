@@ -134,7 +134,7 @@ export function ARVisualization({ rechargeDepth, rechargeWidth, rechargeLength }
       ctx.fillStyle = "#10b981";
       ctx.font = "bold 13px system-ui";
       ctx.textAlign = "center";
-      ctx.fillText(`Recharge Pit: ${rechargeLength}m × ${rechargeWidth}m × ${rechargeDepth}m`, cx, cy - pitL / 2 - pitD - 12);
+      ctx.fillText(t("arRechargePitLabel").replace("{length}", String(rechargeLength)).replace("{width}", String(rechargeWidth)).replace("{depth}", String(rechargeDepth)), cx, cy - pitL / 2 - pitD - 12);
 
       // Pipe connection
       ctx.beginPath();
@@ -170,8 +170,8 @@ export function ARVisualization({ rechargeDepth, rechargeWidth, rechargeLength }
       ctx.textAlign = "left";
       ctx.fillText(t("arYardPreview"), W - 192, 28);
       ctx.font = "10px system-ui";
-      ctx.fillText(`Dimensions: ${rechargeLength}×${rechargeWidth}×${rechargeDepth}m`, W - 192, 44);
-      ctx.fillText(`Volume: ${(rechargeLength * rechargeWidth * rechargeDepth).toFixed(1)} m³`, W - 192, 58);
+      ctx.fillText(t("dimensionsLabel").replace("{length}", String(rechargeLength)).replace("{width}", String(rechargeWidth)).replace("{depth}", String(rechargeDepth)), W - 192, 44);
+      ctx.fillText(t("volumeLabel").replace("{volume}", (rechargeLength * rechargeWidth * rechargeDepth).toFixed(1)), W - 192, 58);
       ctx.fillText(t("arTapToPlace"), W - 192, 76);
 
       ctx.textAlign = "center";

@@ -149,7 +149,7 @@ export default function HomePage() {
           <div className="relative max-w-5xl mx-auto px-4 py-28 text-center w-full">
             <div className="inline-flex items-center gap-2 bg-cyan-900/30 border border-cyan-500/25 rounded-full px-5 py-2 text-sm text-cyan-300 mb-8 backdrop-blur-sm">
               <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              Powered by CGWB & IMD Official Data
+              {t("homePoweredByOfficialData")}
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-5 leading-tight tracking-tight">
@@ -159,8 +159,7 @@ export default function HomePage() {
               {t("heroSubtitle")}
             </p>
             <p className="text-blue-300/70 mb-12 max-w-2xl mx-auto text-base leading-relaxed">
-              Groundwater replenishment is critical for India&apos;s water security. The Central Ground Water Board (CGWB)
-              has published scientific manuals on RTRWH — now those insights are in your hands, on your phone.
+              {t("homeHeroDescription")}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -221,22 +220,17 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl font-bold text-white mb-5">
-                Why Groundwater Recharge Matters
+                {t("homeWhyHeading")}
               </h2>
               <div className="space-y-4 text-blue-200/80 text-sm leading-relaxed">
                 <p>
-                  Groundwater replenishment is a <strong className="text-white">critical factor for the augmentation and
-                  sustainability</strong> of water resources in India. There is significant potential in both
-                  rural and urban areas for harvesting rainwater from individual rooftops.
+                  {t("homeWhyPoint1Prefix")} <strong className="text-white">{t("homeWhyPoint1Strong")}</strong> {t("homeWhyPoint1Suffix")}
                 </p>
                 <p>
-                  The <strong className="text-white">Central Ground Water Board (CGWB)</strong> has published several
-                  scientific manuals and reports on rooftop rainwater harvesting (RTRWH) potential, as well as
-                  FAQs and practical guides for artificial recharge.
+                  {t("homeWhyPoint2Prefix")} <strong className="text-white">{t("homeWhyPoint2Strong")}</strong> {t("homeWhyPoint2Suffix")}
                 </p>
                 <p>
-                  However, there is currently <strong className="text-yellow-300">no user-friendly digital platform</strong> where
-                  individuals can directly assess their rainwater harvesting potential — until now.
+                  {t("homeWhyPoint3Prefix")} <strong className="text-yellow-300">{t("homeWhyPoint3Strong")}</strong> {t("homeWhyPoint3Suffix")}
                 </p>
               </div>
             </div>
