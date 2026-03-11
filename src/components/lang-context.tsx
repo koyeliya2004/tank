@@ -37,11 +37,16 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     if (typeof window === "undefined") return;
     try {
       const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
-      const storedValue = stored ?? window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
-      const browserLang = window.navigator.language.split("-")[0];
+      const legacyStored = stored ? null : window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
+      const storedValue = stored ?? legacyStored;
+      const rawBrowserLang = window.navigator.language;
+      const browserLang = rawBrowserLang ? rawBrowserLang.split("-")[0] : "";
       const nextLang = resolveInitialLanguage(storedValue, browserLang);
       if (nextLang) {
         setLang(nextLang);
+      }
+      if (legacyStored) {
+        window.localStorage.removeItem(LEGACY_LANG_STORAGE_KEY);
       }
     } catch {
       // ignore storage errors (private mode / disabled storage)
@@ -58,7 +63,6 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== "undefined") {
       try {
         window.localStorage.setItem(LANG_STORAGE_KEY, lang);
-        window.localStorage.removeItem(LEGACY_LANG_STORAGE_KEY);
       } catch {
         // ignore storage errors (private mode / disabled storage)
       }
