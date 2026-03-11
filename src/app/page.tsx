@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useLang } from "@/components/lang-context";
-import { LanguageSwitcher } from "@/components/language-switcher";
 import { AnimatedBackground } from "@/components/animated-background";
 import { Waves, MapPin, TrendingUp, Shield, Users, Download, Cpu, Globe, ArrowRight, ChevronRight, Droplets, Zap, BarChart3, Leaf, Building2, CloudRain, BookOpen } from "lucide-react";
 
@@ -107,7 +106,6 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <LanguageSwitcher />
               <Link
                 href="/assess"
                 className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-sm font-medium px-4 py-2 rounded-xl transition-all shadow-lg shadow-cyan-600/20 hover:shadow-cyan-500/30 flex items-center gap-1"
