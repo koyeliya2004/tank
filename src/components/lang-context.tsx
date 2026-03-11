@@ -14,7 +14,8 @@ const LangContext = createContext<LangContextType>({
   t: (k) => k,
 });
 
-const LANG_STORAGE_KEY = "jalnet-lang";
+const LANG_STORAGE_KEY = "jalnet-language-preference";
+const LEGACY_LANG_STORAGE_KEY = "jalnet-lang";
 
 const isLanguage = (value: string): value is Language =>
   LANGUAGES.some((lang) => lang.code === value);
@@ -25,10 +26,12 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
-    const browserLang = window.navigator.language?.split("-")[0];
+    const legacyStored = stored ? null : window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
+    const storedValue = stored ?? legacyStored;
+    const browserLang = window.navigator.language.split("-")[0];
     const nextLang =
-      stored && isLanguage(stored)
-        ? stored
+      storedValue && isLanguage(storedValue)
+        ? storedValue
         : browserLang && isLanguage(browserLang)
           ? browserLang
           : null;
@@ -45,6 +48,7 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     }
     if (typeof window !== "undefined") {
       window.localStorage.setItem(LANG_STORAGE_KEY, lang);
+      window.localStorage.removeItem(LEGACY_LANG_STORAGE_KEY);
     }
   }, [initialized, lang]);
 
