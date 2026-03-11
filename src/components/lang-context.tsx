@@ -20,6 +20,16 @@ const LEGACY_LANG_STORAGE_KEY = "jalnet-lang";
 const isLanguage = (value: string): value is Language =>
   LANGUAGES.some((lang) => lang.code === value);
 
+const resolveInitialLanguage = (storedValue: string | null, browserLang: string): Language | null => {
+  if (storedValue && isLanguage(storedValue)) {
+    return storedValue;
+  }
+  if (browserLang && isLanguage(browserLang)) {
+    return browserLang;
+  }
+  return null;
+};
+
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Language>("en");
   const [initialized, setInitialized] = useState(false);
@@ -29,12 +39,7 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
       const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
       const storedValue = stored ?? window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
       const browserLang = window.navigator.language.split("-")[0];
-      const nextLang =
-        storedValue && isLanguage(storedValue)
-          ? storedValue
-          : browserLang && isLanguage(browserLang)
-            ? browserLang
-            : null;
+      const nextLang = resolveInitialLanguage(storedValue, browserLang);
       if (nextLang) {
         setLang(nextLang);
       }
