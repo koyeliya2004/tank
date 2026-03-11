@@ -53,7 +53,7 @@ const features = [
   },
   {
     icon: <BarChart3 className="w-6 h-6 text-emerald-400" />,
-    titleKey: "costBenefit",
+    titleKey: "featureCostBenefitTitle",
     descKey: "featureCostBenefitDesc",
   },
   {
@@ -86,7 +86,7 @@ const rechargeHighlights = [
   { labelKey: "whyCardRunoffTitle", descKey: "whyCardRunoffDesc", icon: "🏠" },
   { labelKey: "whyCardAquiferTitle", descKey: "whyCardAquiferDesc", icon: "🌊" },
   { labelKey: "whyCardStructuresTitle", descKey: "whyCardStructuresDesc", icon: "🔧" },
-  { labelKey: "costBenefit", descKey: "whyCardCostDesc", icon: "📈" },
+  { labelKey: "whyCardCostTitle", descKey: "whyCardCostDesc", icon: "📈" },
 ];
 
 const howSteps = [
