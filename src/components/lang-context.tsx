@@ -37,10 +37,12 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     if (typeof window === "undefined") return;
     try {
       const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
-      const legacyStored = stored ? null : window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
+      const legacyStored = window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
       const storedValue = stored ?? legacyStored;
       const rawBrowserLang = window.navigator.language;
-      const browserLang = rawBrowserLang ? rawBrowserLang.split("-")[0] : "";
+      const primaryBrowserLang = rawBrowserLang ? rawBrowserLang.split("-")[0] : "";
+      const browserLang =
+        rawBrowserLang && isLanguage(rawBrowserLang) ? rawBrowserLang : primaryBrowserLang;
       const nextLang = resolveInitialLanguage(storedValue, browserLang);
       if (nextLang) {
         setLang(nextLang);
