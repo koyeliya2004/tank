@@ -1138,5 +1138,5 @@ export const translations: Record<Language, Record<string, string>> = {
 };
 
 export function t(lang: Language, key: string): string {
-  return translations[lang]?.[key] ?? translations["en"][key] ?? key;
+  return translations[lang]?.[key] || translations["en"][key] || key;
 }

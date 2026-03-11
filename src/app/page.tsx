@@ -203,7 +203,7 @@ export default function HomePage() {
             {stats.map((s, i) => (
               <div key={i} className="text-center group">
                 <div className="text-4xl font-bold text-white tracking-tight group-hover:text-cyan-300 transition-colors">
-                  {s.value}<span className="text-cyan-400 text-2xl">{s.unitKey ? t(s.unitKey) : ""}</span>
+                  {s.value}<span className="text-cyan-400 text-2xl">{t(s.unitKey)}</span>
                 </div>
                 <div className="text-sm text-blue-300/80 mt-1.5">{t(s.labelKey)}</div>
               </div>
