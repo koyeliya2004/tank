@@ -39,6 +39,8 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
       if (nextLang) {
         setLang(nextLang);
       }
+    } catch {
+      // ignore storage errors (private mode / disabled storage)
     } finally {
       setInitialized(true);
     }
@@ -53,7 +55,9 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
       try {
         window.localStorage.setItem(LANG_STORAGE_KEY, lang);
         window.localStorage.removeItem(LEGACY_LANG_STORAGE_KEY);
-      } catch {}
+      } catch {
+        // ignore storage errors (private mode / disabled storage)
+      }
     }
   }, [initialized, lang]);
 
