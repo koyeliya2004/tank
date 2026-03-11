@@ -24,6 +24,8 @@ const STATES = [
   "West Bengal",
 ];
 
+const stateLabelKey = (name: string) => `state.${name}`;
+
 type Tab = "assess" | "results" | "leaderboard" | "marketplace" | "subsidy" | "blueprint";
 
 const RESULT_TABS: Tab[] = ["results", "marketplace", "subsidy", "blueprint"];
@@ -93,11 +95,11 @@ export default function AssessmentPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!lat || !lon) {
-      setError("Please drop a pin on the map to select your location.");
+      setError(t("assessErrorDropPin"));
       return;
     }
     if (!name.trim()) {
-      setError("Please enter your name.");
+      setError(t("assessErrorName"));
       return;
     }
     setError("");
@@ -133,13 +135,13 @@ export default function AssessmentPage() {
           waterCredits: data.waterCredits,
           annualHarvestLiters: data.waterHarvest.annualHarvestable,
           roofArea,
-          structureType: data.structures[0]?.name || "Recharge Pit",
+          structureType: data.structures[0]?.name || t("defaultStructureName"),
         }),
       });
 
       setTab("results");
     } catch (err) {
-      setError("Assessment failed. Please try again.");
+      setError(t("assessErrorFailed"));
       console.error(err);
     } finally {
       setLoading(false);
@@ -147,12 +149,12 @@ export default function AssessmentPage() {
   };
 
   const tabs: { id: Tab; label: string; emoji: string; needsResult?: boolean }[] = [
-    { id: "assess", label: "Assess", emoji: "📋" },
-    { id: "results", label: "Results", emoji: "📊", needsResult: true },
-    { id: "leaderboard", label: "Leaderboard", emoji: "🏆" },
-    { id: "marketplace", label: "Vendors", emoji: "🏪", needsResult: true },
-    { id: "subsidy", label: "Subsidies", emoji: "🏛️", needsResult: true },
-    { id: "blueprint", label: "Blueprint", emoji: "📄", needsResult: true },
+    { id: "assess", label: t("tabAssess"), emoji: "📋" },
+    { id: "results", label: t("tabResults"), emoji: "📊", needsResult: true },
+    { id: "leaderboard", label: t("tabLeaderboard"), emoji: "🏆" },
+    { id: "marketplace", label: t("tabVendors"), emoji: "🏪", needsResult: true },
+    { id: "subsidy", label: t("tabSubsidies"), emoji: "🏛️", needsResult: true },
+    { id: "blueprint", label: t("tabBlueprint"), emoji: "📄", needsResult: true },
   ];
 
   return (
@@ -179,21 +181,21 @@ export default function AssessmentPage() {
                 <Droplets className="w-4 h-4 text-white" />
               </div>
             </div>
-            <span className="text-sm font-semibold">JalNet</span>
+            <span className="text-sm font-semibold">{t("brandName")}</span>
           </Link>
           <Link
             href="/"
             className="flex items-center gap-2 text-xs text-blue-200 bg-blue-900/30 border border-blue-700/30 px-3 py-1.5 rounded-full hover:bg-blue-900/50 transition"
           >
             <Home className="w-3.5 h-3.5" />
-            Back to Home
+            {t("backToHome")}
           </Link>
         </div>
         <div className="max-w-3xl mx-auto px-3">
           <div
             className="flex gap-1.5 overflow-x-auto pb-2.5 scrollbar-hide"
             role="tablist"
-            aria-label="Assessment sections"
+            aria-label={t("assessmentSectionsAria")}
             aria-orientation="horizontal"
           >
             {tabs.map((tab_) => (
@@ -230,9 +232,9 @@ export default function AssessmentPage() {
           <div id="tab-panel-assess" role="tabpanel" aria-labelledby="tab-assess">
             <form onSubmit={handleSubmit} className="space-y-6">
             <div className="text-center mb-4">
-              <h1 className="text-2xl font-bold text-white">RTRWH Feasibility Assessment</h1>
+              <h1 className="text-2xl font-bold text-white">{t("assessHeading")}</h1>
               <p className="text-blue-300/80 text-sm mt-2">
-                Enter your details to assess rooftop rainwater harvesting potential
+                {t("assessSubheading")}
               </p>
             </div>
 
@@ -246,7 +248,7 @@ export default function AssessmentPage() {
             <div className="glow-card bg-blue-950/30 border border-blue-700/20 rounded-2xl p-5 space-y-4">
               <h2 className="text-sm font-semibold text-blue-200 uppercase tracking-wider flex items-center gap-2">
                 <span className="w-6 h-6 rounded-lg bg-blue-500/15 flex items-center justify-center text-xs">👤</span>
-                Personal Details
+                {t("assessPersonalDetails")}
               </h2>
               <div>
                 <label className="text-sm text-blue-200">{t("nameLabel")} *</label>
@@ -256,7 +258,7 @@ export default function AssessmentPage() {
                   onChange={(e) => setName(e.target.value)}
                   required
                   className="w-full mt-1.5 bg-blue-900/30 border border-blue-600/30 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all placeholder:text-blue-500/50"
-                  placeholder="Your full name"
+                  placeholder={t("placeholderFullName")}
                 />
               </div>
               <div>
@@ -271,15 +273,15 @@ export default function AssessmentPage() {
                 />
               </div>
               <div>
-                <label className="text-sm text-blue-200">State *</label>
+                <label className="text-sm text-blue-200">{t("stateLabel")} *</label>
                 <select
                   value={state}
                   onChange={(e) => setState(e.target.value)}
                   className="w-full mt-1.5 bg-blue-900/30 border border-blue-600/30 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all"
                 >
-                  <option value="">Select or auto-detected from map</option>
+                  <option value="">{t("stateSelectHint")}</option>
                   {STATES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
+                    <option key={s} value={s}>{t(stateLabelKey(s))}</option>
                   ))}
                 </select>
               </div>
@@ -289,11 +291,10 @@ export default function AssessmentPage() {
             <div className="glow-card bg-blue-950/30 border border-blue-700/20 rounded-2xl p-5 space-y-4">
               <h2 className="text-sm font-semibold text-blue-200 uppercase tracking-wider flex items-center gap-2">
                 <span className="w-6 h-6 rounded-lg bg-blue-500/15 flex items-center justify-center text-xs">📍</span>
-                Location & Roof Details
+                {t("assessLocationRoof")}
               </h2>
               <p className="text-xs text-blue-400/80">
-                Drop a pin on the map to auto-detect your aquifer, rainfall data and location.
-                Use the CV button to detect roof area from satellite imagery.
+                {t("assessLocationHelp")}
               </p>
               <MapPicker
                 onLocationSelect={handleLocationSelect}
@@ -309,7 +310,7 @@ export default function AssessmentPage() {
                   className="w-full mt-1.5 bg-blue-900/30 border border-blue-600/30 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all"
                 >
                   {Object.keys(RUNOFF_COEFFICIENTS).map((m) => (
-                    <option key={m} value={m}>{m} (coeff: {RUNOFF_COEFFICIENTS[m]})</option>
+                    <option key={m} value={m}>{t(`roofMaterial.${m}`)} ({t("coefficientShort")}: {RUNOFF_COEFFICIENTS[m]})</option>
                   ))}
                 </select>
               </div>
@@ -319,12 +320,12 @@ export default function AssessmentPage() {
             <div className="glow-card bg-blue-950/30 border border-blue-700/20 rounded-2xl p-5 space-y-4">
               <h2 className="text-sm font-semibold text-blue-200 uppercase tracking-wider flex items-center gap-2">
                 <span className="w-6 h-6 rounded-lg bg-blue-500/15 flex items-center justify-center text-xs">🏗️</span>
-                Site Details
+                {t("assessSiteDetails")}
               </h2>
               <div>
                 <label className="text-sm text-blue-200">{t("openSpaceLabel")}</label>
                 <p className="text-xs text-blue-400/80 mt-0.5 mb-1.5">
-                  Garden, courtyard, or vacant land available for recharge structures
+                  {t("assessOpenSpaceHelp")}
                 </p>
                 <input
                   type="number"
@@ -332,7 +333,7 @@ export default function AssessmentPage() {
                   value={openSpaceArea}
                   onChange={(e) => setOpenSpaceArea(parseFloat(e.target.value) || 0)}
                   className="w-full bg-blue-900/30 border border-blue-600/30 text-white rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all placeholder:text-blue-500/50"
-                  placeholder="e.g. 50"
+                  placeholder={t("placeholderEg50")}
                 />
               </div>
               <div className="flex gap-5">
@@ -363,7 +364,7 @@ export default function AssessmentPage() {
               className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-2xl transition-all text-base shadow-xl shadow-blue-600/20 hover:shadow-blue-500/30 hover:-translate-y-0.5"
             >
               {loading ? (
-                <><Loader2 className="w-5 h-5 animate-spin" /> Running CGWB Assessment...</>
+                <><Loader2 className="w-5 h-5 animate-spin" /> {t("assessRunning")}</>
               ) : (
                 <>{t("calculateBtn")} <ChevronRight className="w-5 h-5" /></>
               )}
@@ -381,16 +382,16 @@ export default function AssessmentPage() {
                 🌍 {t("geologicalTwin")}
               </h2>
               <p className="text-sm text-blue-300/80 mb-4">
-                3D subsurface visualization of the aquifer beneath your location
+                {t("assessGeoDesc")}
               </p>
               <GeologicalTwin aquifer={result.aquifer} />
             </div>
             <div className="glow-card bg-blue-950/30 border border-blue-700/20 rounded-2xl p-5">
               <h2 className="text-xl font-bold text-white mb-4">
-                🥽 {t("arView")} — Augmented Reality Placement
+                🥽 {t("arView")} — {t("assessArPlacement")}
               </h2>
               <p className="text-sm text-blue-300/80 mb-4">
-                Point your camera at your yard to see where the recharge pit would fit
+                {t("assessArDesc")}
               </p>
               {result.structures.length > 0 && (
                 <ARVisualization

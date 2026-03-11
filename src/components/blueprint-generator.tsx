@@ -1,12 +1,15 @@
 "use client";
 import { AssessmentResult } from "@/lib/feasibility-engine";
 import { Download, FileText } from "lucide-react";
+import { useLang } from "./lang-context";
 
 interface BlueprintProps {
   result: AssessmentResult;
 }
 
 export function BlueprintGenerator({ result }: BlueprintProps) {
+  const { t } = useLang();
+
   const handleDownload = async () => {
     const { jsPDF } = await import("jspdf");
     const doc = new jsPDF();
@@ -152,7 +155,7 @@ export function BlueprintGenerator({ result }: BlueprintProps) {
     doc.text(`Total Installation Cost: ₹${result.costBenefit.totalInstallationCost.toLocaleString()}`, 15, y); y += 6;
     doc.text(`Annual Maintenance Cost: ₹${result.costBenefit.annualMaintenanceCost.toLocaleString()}`, 15, y); y += 6;
     doc.text(`Annual Water Value Saved: ₹${result.costBenefit.annualWaterValueINR.toLocaleString()}`, 15, y); y += 6;
-    doc.text(`Payback Period: ${result.costBenefit.paybackPeriodYears > 99 ? "N/A" : result.costBenefit.paybackPeriodYears.toFixed(1) + " years"}`, 15, y); y += 6;
+    doc.text(`Payback Period: ${result.costBenefit.paybackPeriodYears > 99 ? t("na") : result.costBenefit.paybackPeriodYears.toFixed(1) + " years"}`, 15, y); y += 6;
     doc.text(`Water Saved Per Year: ${result.costBenefit.waterSavedPerYear.toFixed(1)} kL`, 15, y); y += 6;
     doc.text(`CO₂ Equivalent Saved: ${result.costBenefit.co2SavedKg.toFixed(1)} kg/year`, 15, y); y += 12;
 
@@ -177,28 +180,27 @@ export function BlueprintGenerator({ result }: BlueprintProps) {
     <div className="space-y-3">
       <h2 className="text-xl font-bold text-white flex items-center gap-2">
         <FileText className="w-5 h-5 text-blue-400" />
-        DIY Smart Blueprint
+        {t("blueprintTitle")}
       </h2>
       <p className="text-sm text-blue-300">
-        Download a localized PDF blueprint with structure dimensions, bill of materials (BOM)
-        with local hardware prices, installation steps, and cost-benefit analysis.
+        {t("blueprintDescription")}
       </p>
       <div className="bg-blue-900/20 border border-blue-600/20 rounded-xl p-4 space-y-2">
         <div className="flex items-center gap-2 text-sm text-blue-200">
           <span className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-          Structure dimensions (pits, trenches, shafts)
+          {t("blueprintItem1")}
         </div>
         <div className="flex items-center gap-2 text-sm text-blue-200">
           <span className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-          Bill of Materials with local market prices
+          {t("blueprintItem2")}
         </div>
         <div className="flex items-center gap-2 text-sm text-blue-200">
           <span className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-xs font-bold">3</span>
-          Cost-benefit analysis & payback period
+          {t("blueprintItem3")}
         </div>
         <div className="flex items-center gap-2 text-sm text-blue-200">
           <span className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-xs font-bold">4</span>
-          CGWB & IMD data references
+          {t("blueprintItem4")}
         </div>
       </div>
       <button
@@ -206,7 +208,7 @@ export function BlueprintGenerator({ result }: BlueprintProps) {
         className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm px-4 py-2.5 rounded-xl transition font-medium w-full justify-center"
       >
         <Download className="w-4 h-4" />
-        Download PDF Blueprint (Free)
+        {t("blueprintDownloadButton")}
       </button>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useEffect } from "react";
 import { AquiferData } from "@/lib/groundwater-data";
+import { useLang } from "./lang-context";
 
 interface GeologicalTwinProps {
   aquifer: AquiferData;
@@ -8,6 +9,7 @@ interface GeologicalTwinProps {
 
 export function GeologicalTwin({ aquifer }: GeologicalTwinProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { t } = useLang();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -98,11 +100,11 @@ export function GeologicalTwin({ aquifer }: GeologicalTwinProps) {
       // Labels
       ctx.font = "bold 11px system-ui";
       ctx.fillStyle = "#94a3b8";
-      ctx.fillText("Ground Surface", 8, H * 0.12 - 4);
+      ctx.fillText(t("geoGroundSurface"), 8, H * 0.12 - 4);
       ctx.fillStyle = "#d97706";
-      ctx.fillText("Topsoil Layer", 8, H * 0.2);
+      ctx.fillText(t("geoTopsoil"), 8, H * 0.2);
       ctx.fillStyle = "#78716c";
-      ctx.fillText(`Unsaturated Zone (${aquifer.depthToWater.toFixed(0)}m depth)`, 8, H * 0.42);
+      ctx.fillText(`${t("geoUnsaturatedZone")} (${aquifer.depthToWater.toFixed(0)}m ${t("unitDepth")})`, 8, H * 0.42);
 
       // Water table line
       ctx.beginPath();
@@ -115,16 +117,16 @@ export function GeologicalTwin({ aquifer }: GeologicalTwinProps) {
       ctx.setLineDash([]);
 
       ctx.fillStyle = "#60a5fa";
-      ctx.fillText(`▶ Water Table (${aquifer.depthToWater.toFixed(1)}m BGL)`, 8, waterTableY - 4);
+      ctx.fillText(`▶ ${t("geoWaterTable")} (${aquifer.depthToWater.toFixed(1)}m BGL)`, 8, waterTableY - 4);
 
       ctx.fillStyle = "#93c5fd";
       ctx.fillText(`${aquifer.aquiferType}`, 8, waterTableY + 22);
       ctx.font = "10px system-ui";
-      ctx.fillText(`Thickness: ${aquifer.aquiferThickness}m | Quality: ${aquifer.waterQuality}`, 8, waterTableY + 36);
+      ctx.fillText(`${t("geoThickness")}: ${aquifer.aquiferThickness}m | ${t("geoQuality")}: ${aquifer.waterQuality}`, 8, waterTableY + 36);
 
       ctx.font = "bold 11px system-ui";
       ctx.fillStyle = "#374151";
-      ctx.fillText("Bedrock", 8, H * 0.92);
+      ctx.fillText(t("geoBedrock"), 8, H * 0.92);
 
       // Status badge
       const catColor = aquifer.category === "Safe" ? "#22c55e"
@@ -137,7 +139,7 @@ export function GeologicalTwin({ aquifer }: GeologicalTwinProps) {
       ctx.fill();
       ctx.fillStyle = catColor;
       ctx.font = "bold 11px system-ui";
-      ctx.fillText(`Status: ${aquifer.category}`, W - 124, 27);
+      ctx.fillText(`${t("geoStatus")}: ${aquifer.category}`, W - 124, 27);
 
       // Recharge potential meter
       ctx.fillStyle = "#1e3a5f";
@@ -150,7 +152,7 @@ export function GeologicalTwin({ aquifer }: GeologicalTwinProps) {
       ctx.fillRect(W - 130, 44, potWidth, 14);
       ctx.fillStyle = "#fff";
       ctx.font = "9px system-ui";
-      ctx.fillText(`Recharge: ${aquifer.rechargePotential}`, W - 127, 55);
+      ctx.fillText(`${t("geoRecharge")}: ${aquifer.rechargePotential}`, W - 127, 55);
 
       frame++;
       animId = requestAnimationFrame(draw);
@@ -158,7 +160,7 @@ export function GeologicalTwin({ aquifer }: GeologicalTwinProps) {
 
     draw();
     return () => cancelAnimationFrame(animId);
-  }, [aquifer]);
+  }, [aquifer, t]);
 
   return (
     <div className="w-full">
@@ -170,15 +172,15 @@ export function GeologicalTwin({ aquifer }: GeologicalTwinProps) {
       <div className="grid grid-cols-3 gap-2 mt-2">
         <div className="text-center bg-blue-900/20 border border-blue-600/20 rounded-lg p-2">
           <div className="text-lg font-bold text-blue-300">{aquifer.depthToWater.toFixed(1)}m</div>
-          <div className="text-xs text-blue-400">Depth to Water</div>
+          <div className="text-xs text-blue-400">{t("depthToWater")}</div>
         </div>
         <div className="text-center bg-blue-900/20 border border-blue-600/20 rounded-lg p-2">
           <div className="text-lg font-bold text-cyan-300">{aquifer.aquiferThickness}m</div>
-          <div className="text-xs text-blue-400">Aquifer Thickness</div>
+          <div className="text-xs text-blue-400">{t("aquiferThickness")}</div>
         </div>
         <div className="text-center bg-blue-900/20 border border-blue-600/20 rounded-lg p-2">
           <div className="text-lg font-bold text-purple-300">{aquifer.stageOfExtraction}%</div>
-          <div className="text-xs text-blue-400">Extraction Stage</div>
+          <div className="text-xs text-blue-400">{t("extractionStage")}</div>
         </div>
       </div>
     </div>
