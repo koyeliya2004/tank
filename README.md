@@ -1,5 +1,26 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Environment Variables
+
+Set these in your Render dashboard (or `.env.local` for local development):
+
+| Variable | Required | Description |
+|---|---|---|
+| `OPENWEATHER_API_KEY` | Recommended | Enables live weekly forecast. Get free key at [openweathermap.org](https://openweathermap.org/api). Without this, app uses IMD historical averages. |
+| `GROQ_API_KEY` | Recommended | Powers the AI chatbot with real LLM responses. Get free key at [console.groq.com](https://console.groq.com). Without this, rule-based fallback is used. |
+| `KVDB_BUCKET_ID` | Optional | KVdb bucket ID for persistent leaderboard. Default: `jalnet_leaderboard_v1`. Create a bucket at [kvdb.io](https://kvdb.io). |
+| `COST_RATE` | Optional | Base installation cost rate in INR per m². Default: `120`. |
+
+### Quick Start (Local)
+```bash
+cp .env.example .env.local
+# Fill in your keys, then:
+npm run dev
+```
+
+### Render Deployment
+Go to your Render service → Environment → Add each variable above.
+
 ## Getting Started
 
 First, run the development server:

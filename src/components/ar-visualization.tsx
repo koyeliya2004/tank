@@ -168,7 +168,7 @@ export function ARVisualization({ rechargeDepth, rechargeWidth, rechargeLength }
       ctx.fillStyle = "#e2e8f0";
       ctx.font = "bold 11px system-ui";
       ctx.textAlign = "left";
-      ctx.fillText("AR Recharge Pit Placement", W - 192, 28);
+      ctx.fillText("Yard Placement Preview", W - 192, 28);
       ctx.font = "10px system-ui";
       ctx.fillText(`Dimensions: ${rechargeLength}×${rechargeWidth}×${rechargeDepth}m`, W - 192, 44);
       ctx.fillText(`Volume: ${(rechargeLength * rechargeWidth * rechargeDepth).toFixed(1)} m³`, W - 192, 58);
@@ -219,7 +219,7 @@ export function ARVisualization({ rechargeDepth, rechargeWidth, rechargeLength }
             <X className="w-4 h-4" />
           </button>
           <div className="absolute bottom-2 left-2 z-20 bg-black/50 text-purple-200 text-xs px-2 py-1 rounded">
-            AR Mode Active • Point at your yard
+            Yard View Active • Point at your yard
           </div>
         </div>
       )}

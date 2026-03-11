@@ -23,13 +23,13 @@ const features = [
   },
   {
     icon: <Globe className="w-6 h-6 text-purple-400" />,
-    title: "3D Geological Digital Twin",
-    desc: "CGWB aquifer data rendered in 3D. Visualize the empty underground space beneath your feet — urging you to fill it.",
+    title: "Geological Cross-Section View",
+    desc: "Animated underground cross-section showing your aquifer depth, water table level, recharge potential, and extraction status — powered by CGWB data.",
   },
   {
     icon: <Cpu className="w-6 h-6 text-yellow-400" />,
-    title: "AR Visualization",
-    desc: "Use your camera to see exactly where a recharge pit fits in your yard and how it connects to your pipes.",
+    title: "Yard Placement View",
+    desc: "Use your device camera to overlay a recharge pit visualization on your yard, showing dimensions and pipe connections.",
   },
   {
     icon: <Users className="w-6 h-6 text-pink-400" />,
@@ -289,7 +289,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-5 gap-4 items-center">
             {[
               { step: 1, title: "Drop Pin", desc: "Select your location on the map", icon: "📍" },
-              { step: 2, title: "CV Detects Roof", desc: "AI segments your rooftop area", icon: "🛰️" },
+              { step: 2, title: "Smart Roof Estimate", desc: "OSM building data or smart estimate for roof area", icon: "🛰️" },
               { step: 3, title: "CGWB Analysis", desc: "Aquifer + rainfall data fetched", icon: "🗄️" },
               { step: 4, title: "Get Blueprint", desc: "Structure dimensions + costs", icon: "📋" },
               { step: 5, title: "Build & Earn Credits", desc: "Join community leaderboard", icon: "🏆" },

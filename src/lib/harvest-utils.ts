@@ -68,3 +68,46 @@ export function computeConfidenceScore(factors: ConfidenceFactors): number {
 }
 
 export const EXPECTED_INDIA_DISTRICTS = 644;
+
+// State-wise construction cost multipliers (relative to national average of 1.0)
+// Based on PWD Schedule of Rates 2023-24 for civil works
+export const STATE_COST_MULTIPLIER: Record<string, number> = {
+  "Delhi": 1.45,
+  "Maharashtra": 1.35,
+  "Karnataka": 1.30,
+  "Tamil Nadu": 1.25,
+  "Gujarat": 1.20,
+  "Telangana": 1.15,
+  "Andhra Pradesh": 1.10,
+  "Haryana": 1.15,
+  "Punjab": 1.10,
+  "Kerala": 1.20,
+  "West Bengal": 1.05,
+  "Uttar Pradesh": 0.90,
+  "Madhya Pradesh": 0.88,
+  "Rajasthan": 0.85,
+  "Bihar": 0.80,
+  "Jharkhand": 0.82,
+  "Odisha": 0.85,
+  "Chhattisgarh": 0.87,
+  "Assam": 0.88,
+  "Himachal Pradesh": 1.10,
+  "Uttarakhand": 1.05,
+  "Goa": 1.30,
+};
+
+/**
+ * Get cost multiplier for a state. Defaults to 1.0 for unknown states.
+ */
+export function getStateCostMultiplier(state: string): number {
+  return STATE_COST_MULTIPLIER[state] ?? 1.0;
+}
+
+/**
+ * Compute installation cost with state-wise adjustment.
+ */
+export function computeCostForState(roofAreaM2: number, state: string, baseRate: number = DEFAULT_COST_RATE): { cost: number; rate: number; multiplier: number } {
+  const multiplier = getStateCostMultiplier(state);
+  const adjustedRate = baseRate * multiplier;
+  return { cost: roofAreaM2 * adjustedRate, rate: adjustedRate, multiplier };
+}
