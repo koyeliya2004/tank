@@ -34,7 +34,6 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Language>("en");
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
-    if (typeof window === "undefined") return;
     try {
       const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
       const legacyStored = window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
@@ -42,7 +41,11 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
       const rawBrowserLang = window.navigator.language;
       const primaryBrowserLang = rawBrowserLang ? rawBrowserLang.split("-")[0] : "";
       const browserLang =
-        rawBrowserLang && isLanguage(rawBrowserLang) ? rawBrowserLang : primaryBrowserLang;
+        rawBrowserLang && isLanguage(rawBrowserLang)
+          ? rawBrowserLang
+          : primaryBrowserLang && isLanguage(primaryBrowserLang)
+            ? primaryBrowserLang
+            : "";
       const nextLang = resolveInitialLanguage(storedValue, browserLang);
       if (nextLang) {
         setLang(nextLang);
@@ -59,15 +62,11 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!initialized) return;
-    if (typeof document !== "undefined") {
-      document.documentElement.lang = lang;
-    }
-    if (typeof window !== "undefined") {
-      try {
-        window.localStorage.setItem(LANG_STORAGE_KEY, lang);
-      } catch {
-        // ignore storage errors (private mode / disabled storage)
-      }
+    document.documentElement.lang = lang;
+    try {
+      window.localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch {
+      // ignore storage errors (private mode / disabled storage)
     }
   }, [initialized, lang]);
 
