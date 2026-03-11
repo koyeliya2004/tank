@@ -20,6 +20,7 @@ export function MapPicker({ onLocationSelect, roofArea, onRoofAreaChange }: MapP
   const [detecting, setDetecting] = useState(false);
   const [detectedArea, setDetectedArea] = useState<number | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [osmSource, setOsmSource] = useState(false);
   const { t } = useLang();
 
   useEffect(() => {
@@ -135,14 +136,73 @@ export function MapPicker({ onLocationSelect, roofArea, onRoofAreaChange }: MapP
       return;
     }
     setDetecting(true);
-    // Simulate CV roof detection (production: Google Maps Static API + TensorFlow.js SegNet model)
-    // The algorithm would: fetch satellite image -> run segmentation -> calculate polygon area -> subtract obstructions
-    await new Promise((r) => setTimeout(r, 2200));
-    const simulatedArea = Math.floor(55 + Math.random() * 180);
-    setDetectedArea(simulatedArea);
-    onRoofAreaChange(simulatedArea);
-    onLocationSelect(selectedLat, selectedLon, address, simulatedArea);
-    setDetecting(false);
+    try {
+      // Query Overpass API for building footprint at the dropped pin (50m radius)
+      const overpassQuery = `
+      [out:json][timeout:10];
+      (
+        way["building"](around:50,${selectedLat},${selectedLon});
+        relation["building"](around:50,${selectedLat},${selectedLon});
+      );
+      out body;
+      >;
+      out skel qt;
+    `;
+      const response = await fetch("https://overpass-api.de/api/interpreter", {
+        method: "POST",
+        body: overpassQuery,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const ways = data.elements?.filter((e: { type: string }) => e.type === "way") || [];
+
+        if (ways.length > 0) {
+          // Use the OSM building's area tag if available, or estimate from node count
+          const building = ways[0];
+          let area: number;
+
+          if (building.tags?.["roof:area"]) {
+            area = parseFloat(building.tags["roof:area"]);
+          } else if (building.tags?.["area"]) {
+            area = parseFloat(building.tags["area"]);
+          } else {
+            // Estimate: use node count as proxy for building complexity
+            // More nodes = larger building perimeter
+            const nodeCount = building.nodes?.length || 5;
+            // Average Indian house: 60-200 sqm. Use node count to scale
+            area = Math.round(60 + (nodeCount - 4) * 8);
+            area = Math.min(Math.max(area, 40), 400); // clamp 40-400 sqm
+          }
+
+          const rounded = Math.round(area);
+          setDetectedArea(rounded);
+          onRoofAreaChange(rounded);
+          onLocationSelect(selectedLat, selectedLon, address, rounded);
+          setOsmSource(true);
+        } else {
+          // No OSM building found — use smart heuristic based on Indian urban density norms
+          // Urban dense: 50-80 sqm, Semi-urban: 80-150 sqm, Rural: 100-200 sqm
+          // We can't know density without more context so use 80 sqm as the median estimate
+          const heuristicArea = 80;
+          setDetectedArea(heuristicArea);
+          onRoofAreaChange(heuristicArea);
+          onLocationSelect(selectedLat, selectedLon, address, heuristicArea);
+          setOsmSource(false);
+        }
+      } else {
+        throw new Error("Overpass API error");
+      }
+    } catch {
+      // Fallback to heuristic on network error
+      const heuristicArea = 80;
+      setDetectedArea(heuristicArea);
+      onRoofAreaChange(heuristicArea);
+      onLocationSelect(selectedLat, selectedLon, address, heuristicArea);
+      setOsmSource(false);
+    } finally {
+      setDetecting(false);
+    }
   };
 
   return (
@@ -188,11 +248,12 @@ export function MapPicker({ onLocationSelect, roofArea, onRoofAreaChange }: MapP
           className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm px-4 py-2 rounded-lg transition font-medium"
         >
           <Layers className="w-4 h-4" />
-          {detecting ? "Analyzing satellite imagery..." : t("detectionBtn")}
+          {detecting ? "Querying building data..." : t("detectionBtn")}
         </button>
         {detectedArea && (
           <span className="text-xs text-emerald-300 bg-emerald-900/30 border border-emerald-600/30 px-2 py-1 rounded-lg">
-            CV: ~{detectedArea} sqm
+            {osmSource ? "OSM" : "Est"}: ~{detectedArea} sqm
+            {!osmSource && <span className="text-yellow-400 ml-1" title="No building found in OSM — using 80 sqm estimate. Please adjust manually.">⚠</span>}
           </span>
         )}
       </div>

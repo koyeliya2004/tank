@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// In-memory leaderboard (production: use a database)
+const KVDB_BUCKET = process.env.KVDB_BUCKET_ID || "jalnet_leaderboard_v1";
+const KVDB_BASE = `https://kvdb.io/${KVDB_BUCKET}`;
+
 interface LeaderboardEntry {
   id: string;
   name: string;
@@ -14,8 +16,8 @@ interface LeaderboardEntry {
   rank?: number;
 }
 
-// Seeded with realistic community entries from various Indian cities
-const leaderboard: LeaderboardEntry[] = [
+// Seeded fallback entries (used if KVdb is unavailable)
+const SEED_ENTRIES: LeaderboardEntry[] = [
   { id: "1", name: "Ramesh Sharma", location: "Jaipur", state: "Rajasthan", waterCredits: 4820, annualHarvestLiters: 482000, roofArea: 120, structureType: "Recharge Shaft", timestamp: Date.now() - 86400000 * 5 },
   { id: "2", name: "Priya Menon", location: "Kochi", state: "Kerala", waterCredits: 8650, annualHarvestLiters: 865000, roofArea: 200, structureType: "Percolation Tank", timestamp: Date.now() - 86400000 * 3 },
   { id: "3", name: "Arjun Patel", location: "Ahmedabad", state: "Gujarat", waterCredits: 3240, annualHarvestLiters: 324000, roofArea: 90, structureType: "Recharge Pit", timestamp: Date.now() - 86400000 * 7 },
@@ -28,21 +30,52 @@ const leaderboard: LeaderboardEntry[] = [
   { id: "10", name: "Meena Sharma", location: "Delhi", state: "Delhi", waterCredits: 1800, annualHarvestLiters: 180000, roofArea: 60, structureType: "Recharge Pit", timestamp: Date.now() - 86400000 * 10 },
 ];
 
-let totalCommunityLiters = leaderboard.reduce((s, e) => s + e.annualHarvestLiters, 0);
-let totalMembers = leaderboard.length;
+async function fetchAllEntries(): Promise<LeaderboardEntry[]> {
+  try {
+    // KVdb stores all entries under key "entries" as a JSON array
+    const res = await fetch(`${KVDB_BASE}/entries`, {
+      headers: { "Accept": "application/json" },
+      next: { revalidate: 0 },
+    });
+    if (!res.ok) return SEED_ENTRIES;
+    const text = await res.text();
+    if (!text || text.trim() === "") return SEED_ENTRIES;
+    const parsed = JSON.parse(text);
+    if (!Array.isArray(parsed) || parsed.length === 0) return SEED_ENTRIES;
+    return parsed as LeaderboardEntry[];
+  } catch {
+    return SEED_ENTRIES;
+  }
+}
+
+async function saveAllEntries(entries: LeaderboardEntry[]): Promise<void> {
+  try {
+    await fetch(`${KVDB_BASE}/entries`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(entries),
+    });
+  } catch {
+    // Silently fail — data will be lost on restart but app won't crash
+    console.warn("[leaderboard] KVdb write failed");
+  }
+}
 
 export async function GET() {
-  const sorted = [...leaderboard]
+  const entries = await fetchAllEntries();
+  const sorted = [...entries]
     .sort((a, b) => b.waterCredits - a.waterCredits)
     .map((e, i) => ({ ...e, rank: i + 1 }));
 
+  const totalCommunityLiters = entries.reduce((s, e) => s + e.annualHarvestLiters, 0);
   const olympicPool = 2500000;
+
   return NextResponse.json({
     leaderboard: sorted,
     stats: {
-      totalMembers,
+      totalMembers: entries.length,
       totalCommunityLiters,
-      totalWaterCredits: leaderboard.reduce((s, e) => s + e.waterCredits, 0),
+      totalWaterCredits: entries.reduce((s, e) => s + e.waterCredits, 0),
       olympicPoolsEquivalent: (totalCommunityLiters / olympicPool).toFixed(2),
       co2SavedKg: (totalCommunityLiters / 1000 * 0.344).toFixed(0),
     },
@@ -64,9 +97,9 @@ export async function POST(req: NextRequest) {
       timestamp: Date.now(),
     };
 
-    leaderboard.push(entry);
-    totalCommunityLiters += entry.annualHarvestLiters;
-    totalMembers++;
+    const current = await fetchAllEntries();
+    const updated = [...current, entry];
+    await saveAllEntries(updated);
 
     return NextResponse.json({ success: true, entry });
   } catch {
