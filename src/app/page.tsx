@@ -97,6 +97,20 @@ const howSteps = [
   { step: 5, titleKey: "howStep5Title", descKey: "howStep5Desc", icon: "🏆" },
 ];
 
+const renderHighlightedText = (text: string, highlightClass: string) => {
+  const [before, highlight, ...rest] = text.split("**");
+  if (!highlight || rest.length === 0) {
+    return text;
+  }
+  return (
+    <>
+      {before}
+      <strong className={highlightClass}>{highlight}</strong>
+      {rest.join("**")}
+    </>
+  );
+};
+
 export default function HomePage() {
   const { t } = useLang();
 
@@ -240,13 +254,13 @@ export default function HomePage() {
               </h2>
               <div className="space-y-4 text-blue-200/80 text-sm leading-relaxed">
                 <p>
-                  {t("whyRechargePara1Prefix")}<strong className="text-white">{t("whyRechargePara1Highlight")}</strong>{t("whyRechargePara1Suffix")}
+                  {renderHighlightedText(t("whyRechargePara1"), "text-white")}
                 </p>
                 <p>
-                  <strong className="text-white">{t("whyRechargePara2Highlight")}</strong>{t("whyRechargePara2Suffix")}
+                  {renderHighlightedText(t("whyRechargePara2"), "text-white")}
                 </p>
                 <p>
-                  {t("whyRechargePara3Prefix")}<strong className="text-yellow-300">{t("whyRechargePara3Highlight")}</strong>{t("whyRechargePara3Suffix")}
+                  {renderHighlightedText(t("whyRechargePara3"), "text-yellow-300")}
                 </p>
               </div>
             </div>
