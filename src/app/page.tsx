@@ -243,7 +243,7 @@ export default function HomePage() {
                   {t("whyRechargePara1Prefix")}<strong className="text-white">{t("whyRechargePara1Highlight")}</strong>{t("whyRechargePara1Suffix")}
                 </p>
                 <p>
-                  {t("whyRechargePara2Prefix")}<strong className="text-white">{t("whyRechargePara2Highlight")}</strong>{t("whyRechargePara2Suffix")}
+                  <strong className="text-white">{t("whyRechargePara2Highlight")}</strong>{t("whyRechargePara2Suffix")}
                 </p>
                 <p>
                   {t("whyRechargePara3Prefix")}<strong className="text-yellow-300">{t("whyRechargePara3Highlight")}</strong>{t("whyRechargePara3Suffix")}
