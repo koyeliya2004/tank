@@ -8,78 +8,93 @@ import { Waves, MapPin, TrendingUp, Shield, Users, Download, Cpu, Globe, ArrowRi
 const features = [
   {
     icon: <MapPin className="w-6 h-6 text-blue-400" />,
-    title: "CV Roof Detection",
-    desc: "Drop a pin on the map. AI auto-segments your roof and detects obstructions, eliminating manual area entry.",
+    titleKey: "featureCvRoofTitle",
+    descKey: "featureCvRoofDesc",
   },
   {
     icon: <Droplets className="w-6 h-6 text-cyan-400" />,
-    title: "Feasibility Check",
-    desc: "CGWB data-backed feasibility score for RTRWH and Artificial Recharge at your specific location.",
+    titleKey: "featureFeasibilityTitle",
+    descKey: "featureFeasibilityDesc",
   },
   {
     icon: <CloudRain className="w-6 h-6 text-sky-400" />,
-    title: "Hyper-Local Weather",
-    desc: "OpenWeather integration gives predictive analytics. 'Based on next week's forecast, you could harvest 450 liters.'",
+    titleKey: "featureWeatherTitle",
+    descKey: "featureWeatherDesc",
   },
   {
     icon: <Globe className="w-6 h-6 text-purple-400" />,
-    title: "Geological Cross-Section View",
-    desc: "Animated underground cross-section showing your aquifer depth, water table level, recharge potential, and extraction status — powered by CGWB data.",
+    titleKey: "featureGeologicalTitle",
+    descKey: "featureGeologicalDesc",
   },
   {
     icon: <Cpu className="w-6 h-6 text-yellow-400" />,
-    title: "Yard Placement View",
-    desc: "Use your device camera to overlay a recharge pit visualization on your yard, showing dimensions and pipe connections.",
+    titleKey: "featureYardTitle",
+    descKey: "featureYardDesc",
   },
   {
     icon: <Users className="w-6 h-6 text-pink-400" />,
-    title: "Water Credit Leaderboard",
-    desc: "Earn virtual credits for every liter recharged. Neighborhoods compete. Community impact dashboard shows collective results.",
+    titleKey: "featureLeaderboardTitle",
+    descKey: "featureLeaderboardDesc",
   },
   {
     icon: <Shield className="w-6 h-6 text-orange-400" />,
-    title: "Vendor Marketplace",
-    desc: "Verified, CGWB-empanelled vendors near you for installation. No more wondering who to call.",
+    titleKey: "featureMarketplaceTitle",
+    descKey: "featureMarketplaceDesc",
   },
   {
     icon: <Download className="w-6 h-6 text-teal-400" />,
-    title: "DIY Blueprint + BOM",
-    desc: "Generate a downloadable PDF with structure dimensions, bill of materials with local hardware prices.",
+    titleKey: "featureBlueprintTitle",
+    descKey: "featureBlueprintDesc",
   },
   {
     icon: <Zap className="w-6 h-6 text-amber-400" />,
-    title: "AI-Powered Insights",
-    desc: "Get instant guidance from our AI assistant trained on CGWB manuals and groundwater best practices.",
+    titleKey: "featureAIInsightsTitle",
+    descKey: "featureAIInsightsDesc",
   },
   {
     icon: <BarChart3 className="w-6 h-6 text-emerald-400" />,
-    title: "Cost-Benefit Analysis",
-    desc: "See your projected savings over 5, 10, and 20 years with detailed ROI breakdowns.",
+    titleKey: "costBenefit",
+    descKey: "featureCostBenefitDesc",
   },
   {
     icon: <Leaf className="w-6 h-6 text-green-400" />,
-    title: "Subsidy Tracker",
-    desc: "State-wise government subsidies and incentives for rainwater harvesting installations.",
+    titleKey: "featureSubsidyTitle",
+    descKey: "featureSubsidyDesc",
   },
   {
     icon: <TrendingUp className="w-6 h-6 text-rose-400" />,
-    title: "Impact Metrics",
-    desc: "Track your contribution to aquifer recharge. Share your impact certificate with the community.",
+    titleKey: "featureImpactTitle",
+    descKey: "featureImpactDesc",
   },
 ];
 
 const stats = [
-  { value: "19", unit: "States", label: "CGWB data coverage" },
-  { value: "61%", unit: "", label: "Indian blocks over-extracted" },
-  { value: "₹0", unit: "", label: "Free to use, forever" },
-  { value: "10", unit: "Languages", label: "Regional language support" },
+  { value: "19", unitKey: "statsStatesUnit", labelKey: "statsCoverageLabel" },
+  { value: "61%", unitKey: "", labelKey: "statsOverExtractedLabel" },
+  { value: "₹0", unitKey: "", labelKey: "statsFreeLabel" },
+  { value: "10", unitKey: "statsLanguagesUnit", labelKey: "statsLanguageSupportLabel" },
 ];
 
 const aquiferFacts = [
-  { icon: <Building2 className="w-5 h-5 text-blue-400" />, title: "Urban Recharge Crisis", desc: "Rapid urbanisation has drastically reduced natural recharge zones in India's cities." },
-  { icon: <BookOpen className="w-5 h-5 text-cyan-400" />, title: "CGWB Guidelines", desc: "The Central Ground Water Board mandates RTRWH for buildings above 100 sqm in water-stressed zones." },
-  { icon: <Waves className="w-5 h-5 text-indigo-400" />, title: "Aquifer Depletion", desc: "India extracts 89% of its groundwater for irrigation — the highest in the world." },
-  { icon: <CloudRain className="w-5 h-5 text-sky-400" />, title: "Monsoon Potential", desc: "India receives 1,170 mm of rainfall annually, yet only 8% is recharged into the ground." },
+  { icon: <Building2 className="w-5 h-5 text-blue-400" />, titleKey: "aquiferFactUrbanTitle", descKey: "aquiferFactUrbanDesc" },
+  { icon: <BookOpen className="w-5 h-5 text-cyan-400" />, titleKey: "aquiferFactGuidelinesTitle", descKey: "aquiferFactGuidelinesDesc" },
+  { icon: <Waves className="w-5 h-5 text-indigo-400" />, titleKey: "aquiferFactDepletionTitle", descKey: "aquiferFactDepletionDesc" },
+  { icon: <CloudRain className="w-5 h-5 text-sky-400" />, titleKey: "aquiferFactMonsoonTitle", descKey: "aquiferFactMonsoonDesc" },
+];
+
+const rechargeHighlights = [
+  { labelKey: "whyCardRunoffTitle", descKey: "whyCardRunoffDesc", icon: "🏠" },
+  { labelKey: "whyCardAquiferTitle", descKey: "whyCardAquiferDesc", icon: "🌊" },
+  { labelKey: "whyCardStructuresTitle", descKey: "whyCardStructuresDesc", icon: "🔧" },
+  { labelKey: "costBenefit", descKey: "whyCardCostDesc", icon: "📈" },
+];
+
+const howSteps = [
+  { step: 1, titleKey: "howStep1Title", descKey: "howStep1Desc", icon: "📍" },
+  { step: 2, titleKey: "howStep2Title", descKey: "howStep2Desc", icon: "🛰️" },
+  { step: 3, titleKey: "howStep3Title", descKey: "howStep3Desc", icon: "🗄️" },
+  { step: 4, titleKey: "howStep4Title", descKey: "howStep4Desc", icon: "📋" },
+  { step: 5, titleKey: "howStep5Title", descKey: "howStep5Desc", icon: "🏆" },
 ];
 
 export default function HomePage() {
@@ -149,7 +164,7 @@ export default function HomePage() {
           <div className="relative max-w-5xl mx-auto px-4 py-28 text-center w-full">
             <div className="inline-flex items-center gap-2 bg-cyan-900/30 border border-cyan-500/25 rounded-full px-5 py-2 text-sm text-cyan-300 mb-8 backdrop-blur-sm">
               <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              Powered by CGWB & IMD Official Data
+              {t("poweredByBadge")}
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-5 leading-tight tracking-tight">
@@ -159,8 +174,7 @@ export default function HomePage() {
               {t("heroSubtitle")}
             </p>
             <p className="text-blue-300/70 mb-12 max-w-2xl mx-auto text-base leading-relaxed">
-              Groundwater replenishment is critical for India&apos;s water security. The Central Ground Water Board (CGWB)
-              has published scientific manuals on RTRWH — now those insights are in your hands, on your phone.
+              {t("heroSupportingText")}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -189,9 +203,9 @@ export default function HomePage() {
             {stats.map((s, i) => (
               <div key={i} className="text-center group">
                 <div className="text-4xl font-bold text-white tracking-tight group-hover:text-cyan-300 transition-colors">
-                  {s.value}<span className="text-cyan-400 text-2xl">{s.unit}</span>
+                  {s.value}<span className="text-cyan-400 text-2xl">{s.unitKey ? t(s.unitKey) : ""}</span>
                 </div>
-                <div className="text-sm text-blue-300/80 mt-1.5">{s.label}</div>
+                <div className="text-sm text-blue-300/80 mt-1.5">{t(s.labelKey)}</div>
               </div>
             ))}
           </div>
@@ -208,8 +222,8 @@ export default function HomePage() {
                   style={{ background: "rgba(0,30,70,0.5)", animationDelay: `${i * 0.1}s` }}
                 >
                   <div className="w-10 h-10 rounded-xl bg-blue-900/50 flex items-center justify-center mb-3">{fact.icon}</div>
-                  <div className="font-semibold text-white text-sm mb-1">{fact.title}</div>
-                  <div className="text-xs text-blue-300/70 leading-relaxed">{fact.desc}</div>
+                  <div className="font-semibold text-white text-sm mb-1">{t(fact.titleKey)}</div>
+                  <div className="text-xs text-blue-300/70 leading-relaxed">{t(fact.descKey)}</div>
                 </div>
               ))}
             </div>
@@ -221,36 +235,26 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl font-bold text-white mb-5">
-                Why Groundwater Recharge Matters
+                {t("whyRechargeTitle")}
               </h2>
               <div className="space-y-4 text-blue-200/80 text-sm leading-relaxed">
                 <p>
-                  Groundwater replenishment is a <strong className="text-white">critical factor for the augmentation and
-                  sustainability</strong> of water resources in India. There is significant potential in both
-                  rural and urban areas for harvesting rainwater from individual rooftops.
+                  {t("whyRechargePara1Prefix")}<strong className="text-white">{t("whyRechargePara1Highlight")}</strong>{t("whyRechargePara1Suffix")}
                 </p>
                 <p>
-                  The <strong className="text-white">Central Ground Water Board (CGWB)</strong> has published several
-                  scientific manuals and reports on rooftop rainwater harvesting (RTRWH) potential, as well as
-                  FAQs and practical guides for artificial recharge.
+                  {t("whyRechargePara2Prefix")}<strong className="text-white">{t("whyRechargePara2Highlight")}</strong>{t("whyRechargePara2Suffix")}
                 </p>
                 <p>
-                  However, there is currently <strong className="text-yellow-300">no user-friendly digital platform</strong> where
-                  individuals can directly assess their rainwater harvesting potential — until now.
+                  {t("whyRechargePara3Prefix")}<strong className="text-yellow-300">{t("whyRechargePara3Highlight")}</strong>{t("whyRechargePara3Suffix")}
                 </p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              {[
-                { label: "Runoff Harvested", desc: "From roof to aquifer recharge", icon: "🏠" },
-                { label: "Principal Aquifer", desc: "CGWB data on your area", icon: "🌊" },
-                { label: "Recharge Structures", desc: "Pits, trenches, shafts", icon: "🔧" },
-                { label: "Cost-Benefit Analysis", desc: "ROI on your investment", icon: "📈" },
-              ].map((item, i) => (
+              {rechargeHighlights.map((item, i) => (
                 <div key={i} className="glow-card border border-blue-700/20 rounded-2xl p-5" style={{ background: "rgba(0,30,80,0.5)" }}>
                   <div className="text-2xl mb-3 animate-float" style={{ animationDelay: `${i * 0.5}s` }}>{item.icon}</div>
-                  <div className="font-semibold text-white text-sm">{item.label}</div>
-                  <div className="text-xs text-blue-300/70 mt-1">{item.desc}</div>
+                  <div className="font-semibold text-white text-sm">{t(item.labelKey)}</div>
+                  <div className="text-xs text-blue-300/70 mt-1">{t(item.descKey)}</div>
                 </div>
               ))}
             </div>
@@ -261,8 +265,8 @@ export default function HomePage() {
         <section className="border-y border-blue-900/30 py-20" style={{ background: "rgba(0,20,60,0.4)" }}>
           <div className="max-w-5xl mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-3">Every Feature, Built for Impact</h2>
-              <p className="text-blue-300/80">From feasibility check to AR visualization to community leaderboard</p>
+              <h2 className="text-3xl font-bold text-white mb-3">{t("featureSectionTitle")}</h2>
+              <p className="text-blue-300/80">{t("featureSectionSubtitle")}</p>
             </div>
             <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
               {features.map((f, i) => (
@@ -272,8 +276,8 @@ export default function HomePage() {
                   style={{ background: "rgba(5,20,55,0.6)", animationDelay: `${i * 0.06}s` }}
                 >
                   <div className="mb-3 w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">{f.icon}</div>
-                  <div className="font-semibold text-white text-sm mb-1.5">{f.title}</div>
-                  <div className="text-xs text-blue-300/70 leading-relaxed">{f.desc}</div>
+                  <div className="font-semibold text-white text-sm mb-1.5">{t(f.titleKey)}</div>
+                  <div className="text-xs text-blue-300/70 leading-relaxed">{t(f.descKey)}</div>
                 </div>
               ))}
             </div>
@@ -283,24 +287,18 @@ export default function HomePage() {
         {/* How it works */}
         <section className="max-w-5xl mx-auto px-4 py-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-3">How JalNet Works</h2>
-            <p className="text-blue-300/80">On-spot assessment in under 2 minutes</p>
+            <h2 className="text-3xl font-bold text-white mb-3">{t("howItWorksTitle")}</h2>
+            <p className="text-blue-300/80">{t("howItWorksSubtitle")}</p>
           </div>
           <div className="grid md:grid-cols-5 gap-4 items-center">
-            {[
-              { step: 1, title: "Drop Pin", desc: "Select your location on the map", icon: "📍" },
-              { step: 2, title: "Smart Roof Estimate", desc: "OSM building data or smart estimate for roof area", icon: "🛰️" },
-              { step: 3, title: "CGWB Analysis", desc: "Aquifer + rainfall data fetched", icon: "🗄️" },
-              { step: 4, title: "Get Blueprint", desc: "Structure dimensions + costs", icon: "📋" },
-              { step: 5, title: "Build & Earn Credits", desc: "Join community leaderboard", icon: "🏆" },
-            ].map((s, i) => (
+            {howSteps.map((s, i) => (
               <div key={i} className="text-center group">
                 <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">{s.icon}</div>
                 <div className="w-9 h-9 bg-gradient-to-br from-cyan-600 to-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold mx-auto mb-2.5 shadow-lg shadow-cyan-500/20">
                   {s.step}
                 </div>
-                <div className="font-semibold text-white text-sm">{s.title}</div>
-                <div className="text-xs text-blue-300/70 mt-1">{s.desc}</div>
+                <div className="font-semibold text-white text-sm">{t(s.titleKey)}</div>
+                <div className="text-xs text-blue-300/70 mt-1">{t(s.descKey)}</div>
               </div>
             ))}
           </div>
@@ -313,18 +311,17 @@ export default function HomePage() {
               <Waves className="w-8 h-8 text-cyan-300" />
             </div>
             <h2 className="text-3xl font-bold text-white mb-4">
-              Empower Yourself. Recharge Your Aquifer.
+              {t("ctaTitle")}
             </h2>
             <p className="text-blue-200/80 mb-8 leading-relaxed">
-              The tool supports regional languages for better accessibility and inclusivity.
-              Available in Hindi, Tamil, Telugu, Kannada, Gujarati, Marathi, Punjabi, Bengali, Malayalam, and English.
+              {t("ctaDescription")}
             </p>
             <Link
               href="/assess"
               className="group inline-flex items-center gap-2 bg-white text-blue-900 font-bold px-8 py-4 rounded-2xl hover:bg-cyan-50 transition-all text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1"
             >
               <Waves className="w-5 h-5" />
-              Start Your Free Assessment
+              {t("ctaButtonLabel")}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
@@ -337,13 +334,10 @@ export default function HomePage() {
               <div className="w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-700 rounded-lg flex items-center justify-center">
                 <Waves className="w-3.5 h-3.5 text-white" />
               </div>
-              <p className="font-medium">JalNet — Groundwater Recharge Assessment Platform</p>
+              <p className="font-medium">{t("footerTitle")}</p>
             </div>
             <p className="text-xs text-blue-600/60 max-w-2xl mx-auto leading-relaxed">
-              Data Sources: Central Ground Water Board (CGWB) Ground Water Year Book 2023 •
-              India Meteorological Department (IMD) Rainfall Atlas •
-              CGWB Technical Manual on Artificial Recharge to Ground Water •
-              National Water Mission, Ministry of Jal Shakti
+              {t("footerSources")}
             </p>
           </div>
         </footer>
