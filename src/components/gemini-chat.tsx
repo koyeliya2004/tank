@@ -3,15 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Bot, Send, X } from "lucide-react";
 import { MAX_GEMINI_HISTORY } from "@/lib/gemini";
+import { useLang } from "./lang-context";
 
 type ChatMessage = { id: string; role: "user" | "assistant"; content: string };
-
-const STARTER_MESSAGE: ChatMessage = {
-  id: "starter",
-  role: "assistant",
-  content:
-    "Hi! I'm JalNet's AI assistant. Ask me about rooftop rainwater harvesting, CGWB guidelines, or how to use this assessment.",
-};
 
 let fallbackCounter = 0;
 
@@ -32,8 +26,9 @@ const createMessage = (role: ChatMessage["role"], content: string): ChatMessage 
 });
 
 export function GeminiChat() {
+  const { t } = useLang();
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([STARTER_MESSAGE]);
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [createMessage("assistant", t("chatStarter"))]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -66,14 +61,14 @@ export function GeminiChat() {
       }
       setMessages((prev) => [
         ...prev,
-        createMessage("assistant", data.reply || "I'm not sure how to answer that yet."),
+        createMessage("assistant", data.reply || t("chatFallbackUnknown")),
       ]);
       setInput("");
     } catch (error) {
       console.error("AI API error:", error);
       setMessages((prev) => [
         ...prev,
-        createMessage("assistant", "Sorry, I couldn't connect to the assistant. Please check your connection and try again."),
+        createMessage("assistant", t("chatFallbackConnection")),
       ]);
     } finally {
       setSending(false);
@@ -90,15 +85,15 @@ export function GeminiChat() {
                 <Bot className="w-4 h-4 text-white" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">AI Assistant</p>
-                <p className="text-[11px] text-blue-300/80">Ask about rainwater harvesting</p>
+                <p className="text-sm font-semibold text-white">{t("chatTitle")}</p>
+                <p className="text-[11px] text-blue-300/80">{t("chatSubtitle")}</p>
               </div>
             </div>
             <button
               type="button"
               onClick={() => setOpen(false)}
               className="w-8 h-8 rounded-full bg-blue-900/40 hover:bg-blue-800/60 text-blue-100 flex items-center justify-center transition"
-              aria-label="Close chat"
+              aria-label={t("chatCloseAria")}
             >
               <X className="w-4 h-4" />
             </button>
@@ -132,8 +127,8 @@ export function GeminiChat() {
                   }
                 }}
                 rows={1}
-                aria-label="Chat message"
-                placeholder="Type your question..."
+                aria-label={t("chatMessageAria")}
+                placeholder={t("chatPlaceholder")}
                 className="flex-1 resize-none rounded-2xl bg-blue-950/40 border border-blue-700/30 px-3 py-2 text-xs text-white placeholder:text-blue-400/70 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
               />
               <button
@@ -141,7 +136,7 @@ export function GeminiChat() {
                 onClick={handleSend}
                 disabled={sending || !input.trim()}
                 className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                aria-label="Send message"
+                aria-label={t("chatSendAria")}
               >
                 {sending ? <span className="text-xs">...</span> : <Send className="w-4 h-4" />}
               </button>
@@ -156,7 +151,7 @@ export function GeminiChat() {
         className="flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-3 shadow-xl shadow-blue-600/30 hover:shadow-blue-500/40 transition"
       >
         <Bot className="w-4 h-4" />
-        <span className="text-sm font-semibold">{open ? "Hide Assistant" : "Chat with AI"}</span>
+        <span className="text-sm font-semibold">{open ? t("chatHide") : t("chatShow")}</span>
       </button>
     </div>
   );

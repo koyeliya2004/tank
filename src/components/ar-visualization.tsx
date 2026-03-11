@@ -29,7 +29,7 @@ export function ARVisualization({ rechargeDepth, rechargeWidth, rechargeLength }
         setCameraError("");
       }
     } catch {
-      setCameraError("Camera not available. Showing simulation.");
+      setCameraError(t("arCameraUnavailable"));
       setArActive(true);
     }
   };
@@ -149,7 +149,7 @@ export function ARVisualization({ rechargeDepth, rechargeWidth, rechargeLength }
       // Label pipe
       ctx.fillStyle = "#60a5fa";
       ctx.font = "11px system-ui";
-      ctx.fillText("Downpipe Connection", cx, cy - pitL / 2 - 70);
+      ctx.fillText(t("arDownpipeConnection"), cx, cy - pitL / 2 - 70);
 
       // Animated water droplets entering pit
       for (let i = 0; i < 3; i++) {
@@ -168,11 +168,11 @@ export function ARVisualization({ rechargeDepth, rechargeWidth, rechargeLength }
       ctx.fillStyle = "#e2e8f0";
       ctx.font = "bold 11px system-ui";
       ctx.textAlign = "left";
-      ctx.fillText("Yard Placement Preview", W - 192, 28);
+      ctx.fillText(t("arYardPreview"), W - 192, 28);
       ctx.font = "10px system-ui";
       ctx.fillText(`Dimensions: ${rechargeLength}×${rechargeWidth}×${rechargeDepth}m`, W - 192, 44);
       ctx.fillText(`Volume: ${(rechargeLength * rechargeWidth * rechargeDepth).toFixed(1)} m³`, W - 192, 58);
-      ctx.fillText("Tap to place in your yard", W - 192, 76);
+      ctx.fillText(t("arTapToPlace"), W - 192, 76);
 
       ctx.textAlign = "center";
       frame++;
@@ -191,7 +191,7 @@ export function ARVisualization({ rechargeDepth, rechargeWidth, rechargeLength }
           className="flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white text-sm px-4 py-2.5 rounded-xl transition font-medium w-full justify-center"
         >
           <Camera className="w-4 h-4" />
-          {t("arView")} - Place Recharge Pit in Your Yard
+          {t("arView")} - {t("arPlacePit")}
         </button>
       ) : (
         <div className="relative rounded-xl overflow-hidden border border-purple-500/40">
@@ -219,7 +219,7 @@ export function ARVisualization({ rechargeDepth, rechargeWidth, rechargeLength }
             <X className="w-4 h-4" />
           </button>
           <div className="absolute bottom-2 left-2 z-20 bg-black/50 text-purple-200 text-xs px-2 py-1 rounded">
-            Yard View Active • Point at your yard
+            {t("arYardViewActive")}
           </div>
         </div>
       )}

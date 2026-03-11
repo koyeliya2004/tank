@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useEffect } from "react";
 import { AquiferData } from "@/lib/groundwater-data";
+import { useLang } from "./lang-context";
 
 interface GeologicalTwinProps {
   aquifer: AquiferData;
@@ -8,6 +9,7 @@ interface GeologicalTwinProps {
 
 export function GeologicalTwin({ aquifer }: GeologicalTwinProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { t } = useLang();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -98,9 +100,9 @@ export function GeologicalTwin({ aquifer }: GeologicalTwinProps) {
       // Labels
       ctx.font = "bold 11px system-ui";
       ctx.fillStyle = "#94a3b8";
-      ctx.fillText("Ground Surface", 8, H * 0.12 - 4);
+      ctx.fillText(t("geoGroundSurface"), 8, H * 0.12 - 4);
       ctx.fillStyle = "#d97706";
-      ctx.fillText("Topsoil Layer", 8, H * 0.2);
+      ctx.fillText(t("geoTopsoil"), 8, H * 0.2);
       ctx.fillStyle = "#78716c";
       ctx.fillText(`Unsaturated Zone (${aquifer.depthToWater.toFixed(0)}m depth)`, 8, H * 0.42);
 
@@ -124,7 +126,7 @@ export function GeologicalTwin({ aquifer }: GeologicalTwinProps) {
 
       ctx.font = "bold 11px system-ui";
       ctx.fillStyle = "#374151";
-      ctx.fillText("Bedrock", 8, H * 0.92);
+      ctx.fillText(t("geoBedrock"), 8, H * 0.92);
 
       // Status badge
       const catColor = aquifer.category === "Safe" ? "#22c55e"
