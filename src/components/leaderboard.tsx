@@ -58,7 +58,7 @@ export function Leaderboard() {
     <div className="space-y-4">
       <h2 className="text-xl font-bold text-white flex items-center gap-2">
         <Trophy className="w-5 h-5 text-yellow-400" />
-        {t("leaderboard")} — Water Credit Rankings
+        {t("leaderboard")} — {t("leaderboardRankings")}
       </h2>
 
       {/* Community stats */}
@@ -67,28 +67,28 @@ export function Leaderboard() {
           <div className="bg-blue-900/30 border border-blue-600/20 rounded-xl p-3 text-center">
             <Users className="w-5 h-5 text-blue-400 mx-auto mb-1" />
             <div className="text-xl font-bold text-white">{stats.totalMembers}</div>
-            <div className="text-xs text-blue-300">Community Members</div>
+            <div className="text-xs text-blue-300">{t("communityMembers")}</div>
           </div>
           <div className="bg-cyan-900/30 border border-cyan-600/20 rounded-xl p-3 text-center">
             <Droplets className="w-5 h-5 text-cyan-400 mx-auto mb-1" />
             <div className="text-xl font-bold text-white">{(stats.totalCommunityLiters / 1000).toFixed(0)}kL</div>
-            <div className="text-xs text-cyan-300">Total Recharged</div>
+            <div className="text-xs text-cyan-300">{t("totalRecharged")}</div>
           </div>
           <div className="bg-emerald-900/30 border border-emerald-600/20 rounded-xl p-3 text-center">
             <TrendingUp className="w-5 h-5 text-emerald-400 mx-auto mb-1" />
             <div className="text-xl font-bold text-white">{stats.olympicPoolsEquivalent}</div>
-            <div className="text-xs text-emerald-300">Olympic Pools</div>
+            <div className="text-xs text-emerald-300">{t("olympicPools")}</div>
           </div>
           <div className="bg-purple-900/30 border border-purple-600/20 rounded-xl p-3 text-center">
             <div className="text-2xl mb-0.5">🌱</div>
             <div className="text-xl font-bold text-white">{Number(stats.co2SavedKg).toLocaleString()}kg</div>
-            <div className="text-xs text-purple-300">CO₂ Saved</div>
+            <div className="text-xs text-purple-300">{t("co2Saved")}</div>
           </div>
         </div>
       )}
 
       {loading ? (
-        <div className="text-center text-blue-300 py-8">Loading leaderboard...</div>
+        <div className="text-center text-blue-300 py-8">{t("loadingLeaderboard")}</div>
       ) : (
         <div className="space-y-2">
           {entries.map((entry) => (
@@ -110,7 +110,7 @@ export function Leaderboard() {
                 <div className="text-blue-300 font-bold text-sm">
                   💧 {entry.waterCredits.toLocaleString()}
                 </div>
-                <div className="text-xs text-blue-400">credits</div>
+                <div className="text-xs text-blue-400">{t("credits")}</div>
                 <div className="text-xs text-emerald-400">
                   {(entry.annualHarvestLiters / 1000).toFixed(0)} kL/yr
                 </div>
@@ -121,7 +121,7 @@ export function Leaderboard() {
       )}
 
       <p className="text-xs text-blue-400 text-center">
-        1 Water Credit = 100 liters recharged. Complete an assessment to join the leaderboard.
+        {t("leaderboardFooter")}
       </p>
     </div>
   );

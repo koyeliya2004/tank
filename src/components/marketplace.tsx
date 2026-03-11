@@ -43,14 +43,14 @@ export function Marketplace({ state, lat, lon }: MarketplaceProps) {
         🏪 {t("marketplace")}
       </h2>
       <p className="text-sm text-blue-300">
-        Verified local vendors for RTRWH and Artificial Recharge installation near you.
+        {t("marketplaceDesc")}
       </p>
 
       {loading ? (
-        <div className="text-center text-blue-300 py-6">Loading vendors...</div>
+        <div className="text-center text-blue-300 py-6">{t("marketplaceLoading")}</div>
       ) : vendors.length === 0 ? (
         <div className="text-center text-blue-400 py-6">
-          No vendors found for {state}. Contact CGWB regional office for referrals.
+          {t("marketplaceNone")} {state}. {t("marketplaceNoneHelp")}
         </div>
       ) : (
         <div className="space-y-3">
@@ -63,12 +63,12 @@ export function Marketplace({ state, lat, lon }: MarketplaceProps) {
                   <div className="flex items-center gap-2 mt-1">
                     {v.verified && (
                       <span className="flex items-center gap-1 text-xs text-emerald-300 bg-emerald-900/30 border border-emerald-600/20 px-2 py-0.5 rounded-full">
-                        <CheckCircle className="w-3 h-3" /> Verified
+                        <CheckCircle className="w-3 h-3" /> {t("verified")}
                       </span>
                     )}
                     {v.cgwbEmpanelled && (
                       <span className="text-xs text-blue-300 bg-blue-900/30 border border-blue-600/20 px-2 py-0.5 rounded-full">
-                        CGWB Empanelled
+                        {t("cgwbEmpanelled")}
                       </span>
                     )}
                   </div>
@@ -78,7 +78,7 @@ export function Marketplace({ state, lat, lon }: MarketplaceProps) {
                     <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
                     <span className="text-yellow-300 font-bold text-sm">{v.rating}</span>
                   </div>
-                  <div className="text-xs text-slate-400">{v.reviews} reviews</div>
+                  <div className="text-xs text-slate-400">{v.reviews} {t("reviews")}</div>
                 </div>
               </div>
 
@@ -103,7 +103,7 @@ export function Marketplace({ state, lat, lon }: MarketplaceProps) {
                   href={`mailto:${v.email}`}
                   className="flex items-center gap-1 text-xs bg-blue-700/30 hover:bg-blue-700/50 text-blue-200 border border-blue-600/30 px-3 py-1.5 rounded-lg transition"
                 >
-                  <Mail className="w-3 h-3" /> Email
+                  <Mail className="w-3 h-3" /> {t("email")}
                 </a>
                 <a
                   href={v.website}
@@ -111,7 +111,7 @@ export function Marketplace({ state, lat, lon }: MarketplaceProps) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 text-xs bg-emerald-700/30 hover:bg-emerald-700/50 text-emerald-200 border border-emerald-600/30 px-3 py-1.5 rounded-lg transition"
                 >
-                  <ExternalLink className="w-3 h-3" /> Website
+                  <ExternalLink className="w-3 h-3" /> {t("website")}
                 </a>
               </div>
             </div>

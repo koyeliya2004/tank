@@ -34,7 +34,7 @@ export function SubsidyTracker({ state, totalCost }: SubsidyTrackerProps) {
       .catch(() => setLoading(false));
   }, [state]);
 
-  if (loading) return <div className="text-blue-300 text-sm py-4">Loading subsidy data...</div>;
+  if (loading) return <div className="text-blue-300 text-sm py-4">{t("loadingSubsidy")}</div>;
 
   const savings = relevant ? (totalCost * relevant.discount_percent) / 100 : 0;
   const netCost = totalCost - savings;
@@ -43,7 +43,7 @@ export function SubsidyTracker({ state, totalCost }: SubsidyTrackerProps) {
     <div className="space-y-4">
       <h2 className="text-xl font-bold text-white flex items-center gap-2">
         <Tag className="w-5 h-5 text-yellow-400" />
-        {t("subsidyInfo")} & Policy Tracker
+        {t("subsidyInfo")} & {t("policyTracker")}
       </h2>
 
       {relevant && (
@@ -58,22 +58,22 @@ export function SubsidyTracker({ state, totalCost }: SubsidyTrackerProps) {
             </div>
             <div className="ml-auto text-right">
               <div className="text-2xl font-bold text-emerald-400">{relevant.discount_percent}%</div>
-              <div className="text-xs text-slate-400">Subsidy</div>
+              <div className="text-xs text-slate-400">{t("subsidy")}</div>
             </div>
           </div>
           <p className="text-sm text-yellow-100 mb-3">{relevant.details}</p>
           <div className="grid grid-cols-3 gap-2 text-center text-xs mb-3">
             <div className="bg-yellow-900/30 rounded-lg p-2">
               <div className="text-white font-bold">₹{totalCost.toLocaleString()}</div>
-              <div className="text-slate-400">Total Cost</div>
+              <div className="text-slate-400">{t("totalCost")}</div>
             </div>
             <div className="bg-emerald-900/30 rounded-lg p-2">
               <div className="text-emerald-300 font-bold">-₹{savings.toLocaleString()}</div>
-              <div className="text-slate-400">You Save</div>
+              <div className="text-slate-400">{t("youSave")}</div>
             </div>
             <div className="bg-blue-900/30 rounded-lg p-2">
               <div className="text-blue-300 font-bold">₹{netCost.toLocaleString()}</div>
-              <div className="text-slate-400">Net Cost</div>
+              <div className="text-slate-400">{t("netCost")}</div>
             </div>
           </div>
           <a
@@ -82,13 +82,13 @@ export function SubsidyTracker({ state, totalCost }: SubsidyTrackerProps) {
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-yellow-600 hover:bg-yellow-500 text-white text-sm px-4 py-2 rounded-lg transition font-medium w-full justify-center"
           >
-            <ExternalLink className="w-4 h-4" /> Apply for {relevant.state} Subsidy
+            <ExternalLink className="w-4 h-4" /> {t("applyForStateSubsidy").replace("{state}", relevant.state)}
           </a>
         </div>
       )}
 
       <div>
-        <h3 className="text-sm font-semibold text-slate-300 mb-2">All State Schemes</h3>
+        <h3 className="text-sm font-semibold text-slate-300 mb-2">{t("allStateSchemes")}</h3>
         <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
           {subsidies.map((s) => (
             <div key={s.state} className={`bg-blue-900/20 border rounded-xl p-3 flex items-center gap-3 ${s.state === state ? "border-yellow-500/40" : "border-blue-600/20"}`}>
@@ -98,7 +98,7 @@ export function SubsidyTracker({ state, totalCost }: SubsidyTrackerProps) {
               </div>
               <div className="shrink-0">
                 <span className="text-emerald-400 font-bold text-sm">{s.discount_percent}%</span>
-                <div className="text-xs text-slate-400">off</div>
+                <div className="text-xs text-slate-400">{t("off")}</div>
               </div>
               <a href={s.url} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="w-3.5 h-3.5 text-blue-400 hover:text-white" />
@@ -108,10 +108,7 @@ export function SubsidyTracker({ state, totalCost }: SubsidyTrackerProps) {
         </div>
       </div>
 
-      <p className="text-xs text-slate-500">
-        Sources: National Water Mission, Ministry of Jal Shakti, State Water Boards. 
-        Always verify current subsidy rates with local authorities.
-      </p>
+      <p className="text-xs text-slate-500">{t("subsidySources")}</p>
     </div>
   );
 }

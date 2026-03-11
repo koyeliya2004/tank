@@ -132,7 +132,7 @@ export function MapPicker({ onLocationSelect, roofArea, onRoofAreaChange }: MapP
 
   const handleAutoDetect = async () => {
     if (!selectedLat || !selectedLon) {
-      alert("Please drop a pin on the map first");
+      alert(t("mapDropPinFirst"));
       return;
     }
     setDetecting(true);
@@ -219,7 +219,7 @@ export function MapPicker({ onLocationSelect, roofArea, onRoofAreaChange }: MapP
           className="flex items-center gap-1 text-xs text-blue-300 hover:text-white bg-blue-800/40 border border-blue-600/30 px-2 py-1 rounded-lg transition disabled:opacity-50"
         >
           <Crosshair className="w-3 h-3" />
-          Use My Location
+          {t("mapUseMyLocation")}
         </button>
       </div>
 
@@ -230,7 +230,7 @@ export function MapPicker({ onLocationSelect, roofArea, onRoofAreaChange }: MapP
       />
 
       {!mapReady && (
-        <p className="text-xs text-blue-400 text-center">Loading map...</p>
+        <p className="text-xs text-blue-400 text-center">{t("mapLoading")}</p>
       )}
 
       {address && (
@@ -248,12 +248,12 @@ export function MapPicker({ onLocationSelect, roofArea, onRoofAreaChange }: MapP
           className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm px-4 py-2 rounded-lg transition font-medium"
         >
           <Layers className="w-4 h-4" />
-          {detecting ? "Querying building data..." : t("detectionBtn")}
+          {detecting ? t("mapQueryingBuildings") : t("detectionBtn")}
         </button>
         {detectedArea && (
           <span className="text-xs text-emerald-300 bg-emerald-900/30 border border-emerald-600/30 px-2 py-1 rounded-lg">
-            {osmSource ? "OSM" : "Est"}: ~{detectedArea} sqm
-            {!osmSource && <span className="text-yellow-400 ml-1" title="No building found in OSM — using 80 sqm estimate. Please adjust manually.">⚠</span>}
+            {osmSource ? t("mapSourceOsm") : t("mapSourceEstimate")}: ~{detectedArea} {t("unitSqm")}
+            {!osmSource && <span className="text-yellow-400 ml-1" title={t("mapEstimateHint")}>⚠</span>}
           </span>
         )}
       </div>

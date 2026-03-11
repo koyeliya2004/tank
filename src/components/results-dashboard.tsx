@@ -298,7 +298,7 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
               <YAxis tick={{ fill: "#64748b", fontSize: 10 }} />
               <Tooltip
                 contentStyle={{ background: "#0f172a", border: "1px solid #1e3a5f", borderRadius: 8, color: "#e2e8f0" }}
-                formatter={(v: number) => [`${v.toFixed(2)} kL`, "Harvest"]}
+                formatter={(v: number) => [`${v.toFixed(2)} kL`, t("harvest")]}
               />
               <Area type="monotone" dataKey="harvest" stroke="#3b82f6" fill="url(#harvestGrad)" strokeWidth={2} />
             </AreaChart>
@@ -357,7 +357,7 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
                 </div>
               </div>
               <div className="mt-2 text-xs text-slate-400">
-                <span className="font-medium text-slate-300">Filter Media:</span> {s.filter_media}
+                <span className="font-medium text-slate-300">{t("filterMedia")}:</span> {s.filter_media}
               </div>
             </div>
           ))}
@@ -391,7 +391,7 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
           <div>
             <div className="text-xs text-slate-400">Payback Period</div>
             <div className="text-lg font-bold text-cyan-300">
-              {result.costBenefit.paybackPeriodYears > 99 ? "N/A" : `${result.costBenefit.paybackPeriodYears.toFixed(1)} yrs`}
+              {result.costBenefit.paybackPeriodYears > 99 ? t("na") : `${result.costBenefit.paybackPeriodYears.toFixed(1)} yrs`}
             </div>
           </div>
           <div>
@@ -409,10 +409,10 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={[
-                { name: "Installation", amount: result.costBenefit.totalInstallationCost },
-                { name: "Roof Cost", amount: dynamicCost },
-                { name: "Annual Maint.", amount: result.costBenefit.annualMaintenanceCost },
-                { name: "Water Value", amount: result.costBenefit.annualWaterValueINR },
+                { name: t("installation"), amount: result.costBenefit.totalInstallationCost },
+                { name: t("roofCost"), amount: dynamicCost },
+                { name: t("annualMaintShort"), amount: result.costBenefit.annualMaintenanceCost },
+                { name: t("waterValue"), amount: result.costBenefit.annualWaterValueINR },
               ]}
               margin={{ top: 5, right: 5, bottom: 5, left: 0 }}
             >
@@ -431,13 +431,13 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
 
       {/* Radar Chart */}
       <div className="bg-slate-900/30 border border-slate-600/20 rounded-xl p-4">
-        <h3 className="text-sm font-semibold text-slate-200 mb-3">RTRWH Potential Radar</h3>
+        <h3 className="text-sm font-semibold text-slate-200 mb-3">{t("rtrwhRadar")}</h3>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData}>
               <PolarGrid stroke="#1e3a5f" />
               <PolarAngleAxis dataKey="metric" tick={{ fill: "#94a3b8", fontSize: 11 }} />
-              <Radar name="Potential" dataKey="value" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
+              <Radar name={t("potential")} dataKey="value" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
             </RadarChart>
           </ResponsiveContainer>
         </div>
@@ -448,12 +448,12 @@ export function ResultsDashboard({ result, weatherData }: ResultsDashboardProps)
         <div className="text-3xl mb-2">🌊</div>
         <p className="text-white font-semibold">{result.impactEquivalent}</p>
         <p className="text-blue-300 text-sm mt-1">
-          You and your community can make a real difference in groundwater conservation.
+          {t("impactFooter")}
         </p>
       </div>
 
       <p className="text-xs text-slate-500 text-center">
-        Data Sources: CGWB Ground Water Year Book 2023, IMD Rainfall Atlas, CGWB Technical Manual on Artificial Recharge
+        {t("dataSourcesShort")}
       </p>
     </div>
   );
