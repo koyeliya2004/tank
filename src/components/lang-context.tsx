@@ -30,23 +30,33 @@ const resolveInitialLanguage = (storedValue: string | null, browserLang: string)
   return null;
 };
 
+const getBrowserLanguage = (): string => {
+  const rawBrowserLang = window.navigator.language;
+  const primaryBrowserLang = rawBrowserLang ? rawBrowserLang.split("-")[0] : "";
+  if (rawBrowserLang && isLanguage(rawBrowserLang)) {
+    return rawBrowserLang;
+  }
+  if (primaryBrowserLang && isLanguage(primaryBrowserLang)) {
+    return primaryBrowserLang;
+  }
+  return "";
+};
+
+const getInitialLanguage = () => {
+  const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
+  const legacyStored = window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
+  const storedValue = stored ?? legacyStored;
+  const browserLang = getBrowserLanguage();
+  const nextLang = resolveInitialLanguage(storedValue, browserLang);
+  return { nextLang, legacyStored };
+};
+
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Language>("en");
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
-      const legacyStored = window.localStorage.getItem(LEGACY_LANG_STORAGE_KEY);
-      const storedValue = stored ?? legacyStored;
-      const rawBrowserLang = window.navigator.language;
-      const primaryBrowserLang = rawBrowserLang ? rawBrowserLang.split("-")[0] : "";
-      const browserLang =
-        rawBrowserLang && isLanguage(rawBrowserLang)
-          ? rawBrowserLang
-          : primaryBrowserLang && isLanguage(primaryBrowserLang)
-            ? primaryBrowserLang
-            : "";
-      const nextLang = resolveInitialLanguage(storedValue, browserLang);
+      const { nextLang, legacyStored } = getInitialLanguage();
       if (nextLang) {
         setLang(nextLang);
       }
