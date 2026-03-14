@@ -16,12 +16,35 @@ import { RUNOFF_COEFFICIENTS, CGWB_AQUIFER_DATA } from "@/lib/groundwater-data";
 import { ChevronRight, Droplets, Home, Loader2 } from "lucide-react";
 
 const STATES = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
-  "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
-  "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim",
-  "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand",
-  "West Bengal",
+  { value: "Andhra Pradesh", key: "stateAndhraPradesh" },
+  { value: "Arunachal Pradesh", key: "stateArunachalPradesh" },
+  { value: "Assam", key: "stateAssam" },
+  { value: "Bihar", key: "stateBihar" },
+  { value: "Chhattisgarh", key: "stateChhattisgarh" },
+  { value: "Delhi", key: "stateDelhi" },
+  { value: "Goa", key: "stateGoa" },
+  { value: "Gujarat", key: "stateGujarat" },
+  { value: "Haryana", key: "stateHaryana" },
+  { value: "Himachal Pradesh", key: "stateHimachalPradesh" },
+  { value: "Jharkhand", key: "stateJharkhand" },
+  { value: "Karnataka", key: "stateKarnataka" },
+  { value: "Kerala", key: "stateKerala" },
+  { value: "Madhya Pradesh", key: "stateMadhyaPradesh" },
+  { value: "Maharashtra", key: "stateMaharashtra" },
+  { value: "Manipur", key: "stateManipur" },
+  { value: "Meghalaya", key: "stateMeghalaya" },
+  { value: "Mizoram", key: "stateMizoram" },
+  { value: "Nagaland", key: "stateNagaland" },
+  { value: "Odisha", key: "stateOdisha" },
+  { value: "Punjab", key: "statePunjab" },
+  { value: "Rajasthan", key: "stateRajasthan" },
+  { value: "Sikkim", key: "stateSikkim" },
+  { value: "Tamil Nadu", key: "stateTamilNadu" },
+  { value: "Telangana", key: "stateTelangana" },
+  { value: "Tripura", key: "stateTripura" },
+  { value: "Uttar Pradesh", key: "stateUttarPradesh" },
+  { value: "Uttarakhand", key: "stateUttarakhand" },
+  { value: "West Bengal", key: "stateWestBengal" },
 ];
 
 type Tab = "assess" | "results" | "leaderboard" | "marketplace" | "subsidy" | "blueprint";
@@ -186,14 +209,14 @@ export default function AssessmentPage() {
             className="flex items-center gap-2 text-xs text-blue-200 bg-blue-900/30 border border-blue-700/30 px-3 py-1.5 rounded-full hover:bg-blue-900/50 transition"
           >
             <Home className="w-3.5 h-3.5" />
-            Back to Home
+            {t("backToHome")}
           </Link>
         </div>
         <div className="max-w-3xl mx-auto px-3">
           <div
             className="flex gap-1.5 overflow-x-auto pb-2.5 scrollbar-hide"
             role="tablist"
-            aria-label="Assessment sections"
+            aria-label={t("assessSectionsAria")}
             aria-orientation="horizontal"
           >
             {tabs.map((tab_) => (
@@ -279,7 +302,7 @@ export default function AssessmentPage() {
                 >
                   <option value="">{t("stateSelectHint")}</option>
                   {STATES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
+                    <option key={s.value} value={s.value}>{t(s.key)}</option>
                   ))}
                 </select>
               </div>

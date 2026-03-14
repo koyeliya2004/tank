@@ -57,7 +57,7 @@ export function GeminiChat() {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data?.error || "AI request failed.");
+        throw new Error(data?.error || t("chatRequestFailed"));
       }
       setMessages((prev) => [
         ...prev,
